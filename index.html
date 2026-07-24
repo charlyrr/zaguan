@@ -949,6 +949,7 @@
     try { return JSON.parse(window.localStorage.getItem(KEY)); } catch (e) { return null; }
   }
   function save() {
+    if (demo) return;                      // la demo nunca escribe en el navegador del visitante
     if (!persistent) { memory = state; return; }
     try { window.localStorage.setItem(KEY, JSON.stringify(state)); }
     catch (e) { document.getElementById("storageWarn").hidden = false; }
@@ -999,14 +1000,55 @@
     delete s.folders;
     s.version = 2;
     if (typeof s.hue !== "number") s.hue = 172;
-    if (!s.mode) s.mode = "auto";
+    if (["auto", "light", "dark"].indexOf(s.mode) < 0) s.mode = "auto";
     if (s.style === "elegante") s.style = "clasico";
     if (["material", "clasico", "cristal", "minimo", "nordico"].indexOf(s.style) < 0) s.style = "material";
     if (!s.engine || !ENGINES[s.engine]) s.engine = "ddg";
     return s;
   }
 
-  var state = migrate(loadRaw()) || DEFAULT;
+  // conjunto de ejemplo para la demo publica y para las capturas
+  var DEMO = {
+    version: 2, engine: "ddg", custom: "", favicons: false, mode: "auto", hue: 172, style: "material",
+    items: [
+      { kind: "folder", id: "d1", name: "Trabajo", links: [
+        { id: "d11", name: "GitHub", url: "https://github.com" },
+        { id: "d12", name: "GitLab", url: "https://gitlab.com" },
+        { id: "d13", name: "Stack Overflow", url: "https://stackoverflow.com" },
+        { id: "d14", name: "MDN", url: "https://developer.mozilla.org" },
+        { id: "d15", name: "Notion", url: "https://notion.so" }
+      ]},
+      { kind: "folder", id: "d2", name: "Lectura", links: [
+        { id: "d21", name: "Hacker News", url: "https://news.ycombinator.com" },
+        { id: "d22", name: "Wikipedia", url: "https://wikipedia.org" },
+        { id: "d23", name: "Lobsters", url: "https://lobste.rs" }
+      ]},
+      { kind: "link", id: "d3", name: "Correo", url: "https://mail.proton.me" },
+      { kind: "folder", id: "d4", name: "Multimedia", links: [
+        { id: "d41", name: "YouTube", url: "https://youtube.com" },
+        { id: "d42", name: "Bandcamp", url: "https://bandcamp.com" }
+      ]},
+      { kind: "link", id: "d5", name: "Calendario", url: "https://calendar.proton.me" },
+      { kind: "link", id: "d6", name: "Mastodon", url: "https://mastodon.social" }
+    ]
+  };
+
+  /* ---------------- parametros de URL ----------------
+     ?demo=1                 carga el conjunto de ejemplo y desactiva el guardado
+     ?style=cristal          fuerza un estilo (material|clasico|cristal|minimo|nordico)
+     ?mode=light             fuerza el modo (auto|light|dark)
+     ?hue=258                fuerza el tono semilla (0-359)
+     Sirven para enlazar cada estilo desde el README y para hacer capturas repetibles. */
+  var params = new URLSearchParams(window.location.search);
+  var demo = params.get("demo") === "1";
+
+  var state = demo ? JSON.parse(JSON.stringify(DEMO)) : (migrate(loadRaw()) || DEFAULT);
+
+  if (params.get("style")) state.style = params.get("style");
+  if (params.get("mode")) state.mode = params.get("mode");
+  var pHue = parseInt(params.get("hue"), 10);
+  if (!isNaN(pHue)) state.hue = ((pHue % 360) + 360) % 360;
+  state = migrate(state) || DEFAULT;
 
   function folders() { return state.items.filter(function (i) { return i.kind === "folder"; }); }
   function looseLinks() { return state.items.filter(function (i) { return i.kind === "link"; }); }
