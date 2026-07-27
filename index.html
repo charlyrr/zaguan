@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inicio</title>
+<title data-i18n="appTitle">Home</title>
 <link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E">
 <style>
   :root {
@@ -400,8 +400,7 @@
 
   .section-title { font-size: 13px; color: var(--muted); margin: 22px 0 10px; }
   .backups { margin: 0 0 12px; padding: 0; list-style: none; max-height: 190px; overflow-y: auto; }
-  .backups:empty::after { content: "Todavía no hay ninguna copia guardada.";
-                          display: block; font-size: 12.5px; color: var(--muted); padding: 10px 2px; }
+  .backups .vacio { font-size: 12.5px; color: var(--muted); padding: 10px 2px; list-style: none; }
   .backup { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 7px;
             border-radius: 14px; background: var(--surface-2); }
   .backup .when { font-size: 13px; font-weight: 500; }
@@ -830,26 +829,23 @@
       <span class="d" id="date"></span>
     </div>
     <div class="actions">
-      <button class="icon-btn" id="editBtn" title="Editar (E)" aria-label="Editar">
+      <button class="icon-btn" id="editBtn" data-i18n-title="editTitle" data-i18n-aria="edit">
         <svg viewBox="0 0 24 24"><path d="M4 20h4l10-10a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>
       </button>
-      <button class="icon-btn" id="cfgBtn" title="Ajustes" aria-label="Ajustes">
+      <button class="icon-btn" id="cfgBtn" data-i18n-title="settings" data-i18n-aria="settings">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1Z"/></svg>
       </button>
     </div>
   </header>
 
-  <p class="warn" id="storageWarn" hidden>
-    Este navegador no deja guardar datos en esta página, así que los cambios se pierden al cerrarla.
-    Sírvela desde <code>http://localhost</code> o desde tu hosting para que persista.
-  </p>
+  <p class="warn" id="storageWarn" data-i18n="storageWarn" hidden></p>
 
   <div class="console">
     <div class="field">
       <svg class="glass" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
       <input id="q" type="text" autocomplete="off" spellcheck="false"
-             placeholder="Buscar, ir a una dirección o filtrar favoritos" aria-label="Buscar">
-      <button class="engine-chip" id="engineBtn" title="Cambiar buscador">DuckDuckGo</button>
+             data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchLabel">
+      <button class="engine-chip" id="engineBtn" data-i18n-title="changeEngine">DuckDuckGo</button>
     </div>
     <div class="hits" id="hits" hidden role="listbox"></div>
   </div>
@@ -857,8 +853,11 @@
   <main class="grid" id="grid"></main>
 
   <p class="hint">
-    <kbd>/</kbd> buscar · <kbd>↑</kbd><kbd>↓</kbd> elegir favorito · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> pestaña nueva ·
-    <kbd>E</kbd> editar · <kbd>Esc</kbd> cerrar carpeta
+    <kbd>/</kbd> <span data-i18n="hintSearch"></span> ·
+    <kbd>↑</kbd><kbd>↓</kbd> <span data-i18n="hintPick"></span> ·
+    <kbd>Ctrl</kbd>+<kbd>Enter</kbd> <span data-i18n="hintNewTab"></span> ·
+    <kbd>E</kbd> <span data-i18n="hintEdit"></span> ·
+    <kbd>Esc</kbd> <span data-i18n="hintClose"></span>
   </p>
 </div>
 
@@ -866,63 +865,65 @@
   <section class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
     <div class="panel-head">
       <input class="panel-title" id="panelTitle" readonly>
-      <button class="icon-btn panel-close" id="panelClose" aria-label="Cerrar">
+      <button class="icon-btn panel-close" id="panelClose" data-i18n-aria="close">
         <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="apps" id="apps"></div>
     <div class="panel-actions">
-      <button class="text-btn" id="emptyFolder">Sacar todo al escritorio</button>
-      <button class="text-btn" id="delFolder">Borrar carpeta</button>
+      <button class="text-btn" id="emptyFolder" data-i18n="emptyAll"></button>
+      <button class="text-btn" id="delFolder" data-i18n="deleteFolder"></button>
     </div>
   </section>
 </div>
 
 <dialog id="linkDlg">
-  <h2 id="linkDlgTitle">Nuevo acceso</h2>
-  <label>Nombre<input type="text" id="lName"></label>
-  <label>Dirección<input type="text" id="lUrl" placeholder="ejemplo.com"></label>
-  <label>Ubicación<select id="lFolder"></select></label>
+  <h2 id="linkDlgTitle"></h2>
+  <label><span data-i18n="fieldName"></span><input type="text" id="lName"></label>
+  <label><span data-i18n="fieldUrl"></span><input type="text" id="lUrl" data-i18n-placeholder="urlPlaceholder"></label>
+  <label><span data-i18n="fieldLocation"></span><select id="lFolder"></select></label>
   <div class="dialog-actions">
-    <button id="lCancel">Cancelar</button>
-    <button class="primary" id="lSave">Guardar</button>
+    <button id="lCancel" data-i18n="cancel"></button>
+    <button class="primary" id="lSave" data-i18n="save"></button>
   </div>
 </dialog>
 
 <dialog id="cfgDlg">
-  <h2>Ajustes</h2>
-  <label style="margin-bottom:6px">Color</label>
+  <h2 data-i18n="settings"></h2>
+  <label data-i18n="language" style="margin-bottom:6px"></label>
+  <select id="cLang" style="margin-bottom:18px"></select>
+  <label data-i18n="color" style="margin-bottom:6px"></label>
   <div class="seeds" id="seeds"></div>
   <div class="segmented" id="modes">
-    <button data-mode="auto">Automático</button>
-    <button data-mode="light">Claro</button>
-    <button data-mode="dark">Oscuro</button>
+    <button data-mode="auto" data-i18n="modeAuto"></button>
+    <button data-mode="light" data-i18n="modeLight"></button>
+    <button data-mode="dark" data-i18n="modeDark"></button>
   </div>
 
-  <label style="margin-bottom:6px">Estilo</label>
+  <label data-i18n="style" style="margin-bottom:6px"></label>
   <div class="segmented styles" id="styles">
-    <button data-style="material">Vivo</button>
-    <button data-style="clasico">Clásico</button>
-    <button data-style="cristal">Cristal</button>
-    <button data-style="minimo">Mínimo</button>
-    <button data-style="nordico">Nórdico</button>
+    <button data-style="material" data-i18n="styleVivid"></button>
+    <button data-style="clasico" data-i18n="styleClassic"></button>
+    <button data-style="cristal" data-i18n="styleGlass"></button>
+    <button data-style="minimo" data-i18n="styleMinimal"></button>
+    <button data-style="nordico" data-i18n="styleNordic"></button>
   </div>
-  <label>Buscador<select id="cEngine"></select></label>
-  <label>Plantilla propia (usa <code>%s</code>)
-    <input type="text" id="cCustom" placeholder="https://buscador.midominio.com/search?q=%s">
+  <label><span data-i18n="engine"></span><select id="cEngine"></select></label>
+  <label><span data-i18n="customTemplate"></span>
+    <input type="text" id="cCustom" placeholder="https://search.example.com/?q=%s">
   </label>
-  <label class="row"><input type="checkbox" id="cFavicons"> Usar el favicon de cada sitio</label>
+  <label class="row"><input type="checkbox" id="cFavicons"> <span data-i18n="useFavicons"></span></label>
 
-  <p class="section-title">Copias de seguridad</p>
+  <p class="section-title" data-i18n="backups"></p>
   <ul class="backups" id="backups"></ul>
   <div class="backup-tools">
-    <button class="mini-btn" id="bMake">Crear copia</button>
-    <button class="mini-btn" id="cExport">Descargar fichero</button>
-    <button class="mini-btn" id="cImport">Restaurar fichero</button>
+    <button class="mini-btn" id="bMake" data-i18n="makeBackup"></button>
+    <button class="mini-btn" id="cExport" data-i18n="downloadFile"></button>
+    <button class="mini-btn" id="cImport" data-i18n="restoreFile"></button>
   </div>
 
   <div class="dialog-actions">
-    <button class="primary" id="cClose">Listo</button>
+    <button class="primary" id="cClose" data-i18n="done"></button>
   </div>
   <input type="file" id="cFile" accept="application/json" hidden>
 </dialog>
@@ -930,6 +931,666 @@
 <script>
 (function () {
   "use strict";
+
+  /* ================= IDIOMAS =================
+     Para añadir uno: copia el objeto "en", tradúcelo y usa el código ISO como clave.
+     Todos los idiomas deben tener exactamente las mismas claves. */
+  var I18N = {
+    "en": {
+      "_name": "English",
+      "_locale": "en",
+      "appTitle": "Home",
+      "searchPlaceholder": "Search, enter an address or filter bookmarks",
+      "searchLabel": "Search",
+      "edit": "Edit",
+      "editTitle": "Edit (E)",
+      "settings": "Settings",
+      "close": "Close",
+      "storageWarn": "This browser won't let the page save data, so your changes are lost when you close it. Serve it from http://localhost or your own hosting to make it stick.",
+      "hintSearch": "search",
+      "hintPick": "pick a bookmark",
+      "hintNewTab": "new tab",
+      "hintEdit": "edit",
+      "hintClose": "close folder",
+      "emptyAll": "Move all to desktop",
+      "deleteFolder": "Delete folder",
+      "newShortcut": "New shortcut",
+      "editShortcut": "Edit shortcut",
+      "fieldName": "Name",
+      "fieldUrl": "Address",
+      "fieldLocation": "Location",
+      "desktopLoose": "Desktop (loose)",
+      "cancel": "Cancel",
+      "save": "Save",
+      "urlPlaceholder": "example.com",
+      "color": "Color",
+      "ownColor": "Custom color",
+      "hueLabel": "Hue {n}",
+      "style": "Style",
+      "modeAuto": "Automatic",
+      "modeLight": "Light",
+      "modeDark": "Dark",
+      "autoDark": "Auto · dark",
+      "autoLight": "Auto · light",
+      "styleVivid": "Vivid",
+      "styleClassic": "Classic",
+      "styleGlass": "Glass",
+      "styleMinimal": "Minimal",
+      "styleNordic": "Nordic",
+      "engine": "Search engine",
+      "customTemplate": "Custom template (use %s)",
+      "useFavicons": "Use each site's favicon",
+      "backups": "Backups",
+      "makeBackup": "Create backup",
+      "downloadFile": "Download file",
+      "restoreFile": "Restore file",
+      "done": "Done",
+      "noBackups": "No backups saved yet.",
+      "backupMeta": "{folders} folders · {links} links",
+      "backupAuto": " · automatic",
+      "restore": "Restore",
+      "deleteBackup": "Delete this backup",
+      "storageNoSave": "This browser can't save here. Use “Download file” to keep a copy.",
+      "emptyDesktop": "Empty desktop. Tap the pencil to add shortcuts and folders.",
+      "newFolder": "New folder",
+      "folderEmpty": "Empty folder. Turn on edit mode to add links.",
+      "add": "Add",
+      "openAria": "Open {name}",
+      "removeAria": "Remove",
+      "changeEngine": "Change search engine",
+      "promptFolderName": "New folder name",
+      "confirmDelete": "Delete “{name}” and its {n} links?",
+      "confirmRestore": "Your current desktop will be replaced with the backup from {date}.\n\nA copy of what you have now will be saved first. Continue?",
+      "noChanges": "Nothing has changed since the last backup, so no new one was created.",
+      "importError": "That file isn't in the expected format. Use one exported from this page.",
+      "desktop": "Desktop",
+      "language": "Language",
+      "languageAuto": "Automatic",
+      "folderWork": "Work",
+      "folderReading": "Reading",
+      "folderMedia": "Media",
+      "linkMail": "Mail",
+      "linkCalendar": "Calendar"
+    },
+    "es": {
+      "_name": "Español",
+      "_locale": "es",
+      "appTitle": "Inicio",
+      "searchPlaceholder": "Buscar, ir a una dirección o filtrar favoritos",
+      "searchLabel": "Buscar",
+      "edit": "Editar",
+      "editTitle": "Editar (E)",
+      "settings": "Ajustes",
+      "close": "Cerrar",
+      "storageWarn": "Este navegador no deja guardar datos en esta página, así que los cambios se pierden al cerrarla. Sírvela desde http://localhost o desde tu hosting para que persista.",
+      "hintSearch": "buscar",
+      "hintPick": "elegir favorito",
+      "hintNewTab": "pestaña nueva",
+      "hintEdit": "editar",
+      "hintClose": "cerrar carpeta",
+      "emptyAll": "Sacar todo al escritorio",
+      "deleteFolder": "Borrar carpeta",
+      "newShortcut": "Nuevo acceso",
+      "editShortcut": "Editar acceso",
+      "fieldName": "Nombre",
+      "fieldUrl": "Dirección",
+      "fieldLocation": "Ubicación",
+      "desktopLoose": "Escritorio (suelto)",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "urlPlaceholder": "ejemplo.com",
+      "color": "Color",
+      "ownColor": "Color propio",
+      "hueLabel": "Tono {n}",
+      "style": "Estilo",
+      "modeAuto": "Automático",
+      "modeLight": "Claro",
+      "modeDark": "Oscuro",
+      "autoDark": "Auto · oscuro",
+      "autoLight": "Auto · claro",
+      "styleVivid": "Vivo",
+      "styleClassic": "Clásico",
+      "styleGlass": "Cristal",
+      "styleMinimal": "Mínimo",
+      "styleNordic": "Nórdico",
+      "engine": "Buscador",
+      "customTemplate": "Plantilla propia (usa %s)",
+      "useFavicons": "Usar el favicon de cada sitio",
+      "backups": "Copias de seguridad",
+      "makeBackup": "Crear copia",
+      "downloadFile": "Descargar fichero",
+      "restoreFile": "Restaurar fichero",
+      "done": "Listo",
+      "noBackups": "Todavía no hay ninguna copia guardada.",
+      "backupMeta": "{folders} carpetas · {links} enlaces",
+      "backupAuto": " · automática",
+      "restore": "Restaurar",
+      "deleteBackup": "Borrar esta copia",
+      "storageNoSave": "El navegador no permite guardar aquí. Usa «Descargar fichero» para conservar una copia.",
+      "emptyDesktop": "Escritorio vacío. Pulsa el lápiz para añadir accesos y carpetas.",
+      "newFolder": "Nueva carpeta",
+      "folderEmpty": "Carpeta vacía. Activa el modo edición para añadir enlaces.",
+      "add": "Añadir",
+      "openAria": "Abrir {name}",
+      "removeAria": "Quitar",
+      "changeEngine": "Cambiar buscador",
+      "promptFolderName": "Nombre de la carpeta nueva",
+      "confirmDelete": "¿Borrar «{name}» y sus {n} enlaces?",
+      "confirmRestore": "Se sustituirá tu escritorio actual por la copia del {date}.\n\nAntes se guardará una copia de lo que tienes ahora. ¿Continuar?",
+      "noChanges": "No hay cambios desde la última copia, así que no se ha creado ninguna nueva.",
+      "importError": "Ese fichero no tiene el formato esperado. Usa uno exportado desde esta misma página.",
+      "desktop": "Escritorio",
+      "language": "Idioma",
+      "languageAuto": "Automático",
+      "folderWork": "Trabajo",
+      "folderReading": "Lectura",
+      "folderMedia": "Multimedia",
+      "linkMail": "Correo",
+      "linkCalendar": "Calendario"
+    },
+    "fr": {
+      "_name": "Français",
+      "_locale": "fr",
+      "appTitle": "Accueil",
+      "searchPlaceholder": "Rechercher, saisir une adresse ou filtrer les favoris",
+      "searchLabel": "Rechercher",
+      "edit": "Modifier",
+      "editTitle": "Modifier (E)",
+      "settings": "Réglages",
+      "close": "Fermer",
+      "storageWarn": "Ce navigateur empêche la page d'enregistrer des données : vos modifications seront perdues à la fermeture. Servez-la depuis http://localhost ou votre propre hébergement pour qu'elles persistent.",
+      "hintSearch": "rechercher",
+      "hintPick": "choisir un favori",
+      "hintNewTab": "nouvel onglet",
+      "hintEdit": "modifier",
+      "hintClose": "fermer le dossier",
+      "emptyAll": "Tout sortir sur le bureau",
+      "deleteFolder": "Supprimer le dossier",
+      "newShortcut": "Nouveau raccourci",
+      "editShortcut": "Modifier le raccourci",
+      "fieldName": "Nom",
+      "fieldUrl": "Adresse",
+      "fieldLocation": "Emplacement",
+      "desktopLoose": "Bureau (isolé)",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "urlPlaceholder": "exemple.com",
+      "color": "Couleur",
+      "ownColor": "Couleur personnalisée",
+      "hueLabel": "Teinte {n}",
+      "style": "Style",
+      "modeAuto": "Automatique",
+      "modeLight": "Clair",
+      "modeDark": "Sombre",
+      "autoDark": "Auto · sombre",
+      "autoLight": "Auto · clair",
+      "styleVivid": "Vif",
+      "styleClassic": "Classique",
+      "styleGlass": "Verre",
+      "styleMinimal": "Minimal",
+      "styleNordic": "Nordique",
+      "engine": "Moteur de recherche",
+      "customTemplate": "Modèle personnalisé (utilisez %s)",
+      "useFavicons": "Utiliser le favicon de chaque site",
+      "backups": "Sauvegardes",
+      "makeBackup": "Créer une sauvegarde",
+      "downloadFile": "Télécharger le fichier",
+      "restoreFile": "Restaurer un fichier",
+      "done": "Terminé",
+      "noBackups": "Aucune sauvegarde enregistrée pour l'instant.",
+      "backupMeta": "{folders} dossiers · {links} liens",
+      "backupAuto": " · automatique",
+      "restore": "Restaurer",
+      "deleteBackup": "Supprimer cette sauvegarde",
+      "storageNoSave": "Ce navigateur ne permet pas d'enregistrer ici. Utilisez « Télécharger le fichier » pour conserver une copie.",
+      "emptyDesktop": "Bureau vide. Appuyez sur le crayon pour ajouter des raccourcis et des dossiers.",
+      "newFolder": "Nouveau dossier",
+      "folderEmpty": "Dossier vide. Activez le mode édition pour ajouter des liens.",
+      "add": "Ajouter",
+      "openAria": "Ouvrir {name}",
+      "removeAria": "Retirer",
+      "changeEngine": "Changer de moteur",
+      "promptFolderName": "Nom du nouveau dossier",
+      "confirmDelete": "Supprimer « {name} » et ses {n} liens ?",
+      "confirmRestore": "Votre bureau actuel sera remplacé par la sauvegarde du {date}.\n\nUne copie de l'état actuel sera enregistrée au préalable. Continuer ?",
+      "noChanges": "Rien n'a changé depuis la dernière sauvegarde, aucune nouvelle n'a été créée.",
+      "importError": "Ce fichier n'a pas le format attendu. Utilisez-en un exporté depuis cette page.",
+      "desktop": "Bureau",
+      "language": "Langue",
+      "languageAuto": "Automatique",
+      "folderWork": "Travail",
+      "folderReading": "Lecture",
+      "folderMedia": "Médias",
+      "linkMail": "Courriel",
+      "linkCalendar": "Agenda"
+    },
+    "de": {
+      "_name": "Deutsch",
+      "_locale": "de",
+      "appTitle": "Start",
+      "searchPlaceholder": "Suchen, Adresse eingeben oder Lesezeichen filtern",
+      "searchLabel": "Suchen",
+      "edit": "Bearbeiten",
+      "editTitle": "Bearbeiten (E)",
+      "settings": "Einstellungen",
+      "close": "Schließen",
+      "storageWarn": "Dieser Browser lässt die Seite nichts speichern, deine Änderungen gehen beim Schließen verloren. Liefere sie über http://localhost oder dein eigenes Hosting aus, damit sie erhalten bleiben.",
+      "hintSearch": "suchen",
+      "hintPick": "Lesezeichen wählen",
+      "hintNewTab": "neuer Tab",
+      "hintEdit": "bearbeiten",
+      "hintClose": "Ordner schließen",
+      "emptyAll": "Alles auf den Desktop",
+      "deleteFolder": "Ordner löschen",
+      "newShortcut": "Neue Verknüpfung",
+      "editShortcut": "Verknüpfung bearbeiten",
+      "fieldName": "Name",
+      "fieldUrl": "Adresse",
+      "fieldLocation": "Ort",
+      "desktopLoose": "Desktop (einzeln)",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "urlPlaceholder": "beispiel.de",
+      "color": "Farbe",
+      "ownColor": "Eigene Farbe",
+      "hueLabel": "Farbton {n}",
+      "style": "Stil",
+      "modeAuto": "Automatisch",
+      "modeLight": "Hell",
+      "modeDark": "Dunkel",
+      "autoDark": "Auto · dunkel",
+      "autoLight": "Auto · hell",
+      "styleVivid": "Lebhaft",
+      "styleClassic": "Klassisch",
+      "styleGlass": "Glas",
+      "styleMinimal": "Minimal",
+      "styleNordic": "Nordisch",
+      "engine": "Suchmaschine",
+      "customTemplate": "Eigene Vorlage (nutze %s)",
+      "useFavicons": "Favicon der jeweiligen Seite verwenden",
+      "backups": "Sicherungen",
+      "makeBackup": "Sicherung erstellen",
+      "downloadFile": "Datei herunterladen",
+      "restoreFile": "Datei wiederherstellen",
+      "done": "Fertig",
+      "noBackups": "Noch keine Sicherung vorhanden.",
+      "backupMeta": "{folders} Ordner · {links} Links",
+      "backupAuto": " · automatisch",
+      "restore": "Wiederherstellen",
+      "deleteBackup": "Diese Sicherung löschen",
+      "storageNoSave": "Dieser Browser kann hier nicht speichern. Nutze „Datei herunterladen“, um eine Kopie zu behalten.",
+      "emptyDesktop": "Leerer Desktop. Tippe auf den Stift, um Verknüpfungen und Ordner hinzuzufügen.",
+      "newFolder": "Neuer Ordner",
+      "folderEmpty": "Leerer Ordner. Aktiviere den Bearbeitungsmodus, um Links hinzuzufügen.",
+      "add": "Hinzufügen",
+      "openAria": "{name} öffnen",
+      "removeAria": "Entfernen",
+      "changeEngine": "Suchmaschine wechseln",
+      "promptFolderName": "Name des neuen Ordners",
+      "confirmDelete": "„{name}“ und die {n} enthaltenen Links löschen?",
+      "confirmRestore": "Dein aktueller Desktop wird durch die Sicherung vom {date} ersetzt.\n\nVorher wird eine Kopie des aktuellen Stands gespeichert. Fortfahren?",
+      "noChanges": "Seit der letzten Sicherung hat sich nichts geändert, es wurde keine neue erstellt.",
+      "importError": "Diese Datei hat nicht das erwartete Format. Nutze eine, die auf dieser Seite exportiert wurde.",
+      "desktop": "Desktop",
+      "language": "Sprache",
+      "languageAuto": "Automatisch",
+      "folderWork": "Arbeit",
+      "folderReading": "Lesen",
+      "folderMedia": "Medien",
+      "linkMail": "E-Mail",
+      "linkCalendar": "Kalender"
+    },
+    "it": {
+      "_name": "Italiano",
+      "_locale": "it",
+      "appTitle": "Home",
+      "searchPlaceholder": "Cerca, inserisci un indirizzo o filtra i preferiti",
+      "searchLabel": "Cerca",
+      "edit": "Modifica",
+      "editTitle": "Modifica (E)",
+      "settings": "Impostazioni",
+      "close": "Chiudi",
+      "storageWarn": "Questo browser non consente alla pagina di salvare dati, quindi le modifiche andranno perse alla chiusura. Servila da http://localhost o dal tuo hosting per renderle persistenti.",
+      "hintSearch": "cerca",
+      "hintPick": "scegli un preferito",
+      "hintNewTab": "nuova scheda",
+      "hintEdit": "modifica",
+      "hintClose": "chiudi cartella",
+      "emptyAll": "Sposta tutto sulla scrivania",
+      "deleteFolder": "Elimina cartella",
+      "newShortcut": "Nuovo collegamento",
+      "editShortcut": "Modifica collegamento",
+      "fieldName": "Nome",
+      "fieldUrl": "Indirizzo",
+      "fieldLocation": "Posizione",
+      "desktopLoose": "Scrivania (singolo)",
+      "cancel": "Annulla",
+      "save": "Salva",
+      "urlPlaceholder": "esempio.it",
+      "color": "Colore",
+      "ownColor": "Colore personalizzato",
+      "hueLabel": "Tonalità {n}",
+      "style": "Stile",
+      "modeAuto": "Automatico",
+      "modeLight": "Chiaro",
+      "modeDark": "Scuro",
+      "autoDark": "Auto · scuro",
+      "autoLight": "Auto · chiaro",
+      "styleVivid": "Vivace",
+      "styleClassic": "Classico",
+      "styleGlass": "Vetro",
+      "styleMinimal": "Minimale",
+      "styleNordic": "Nordico",
+      "engine": "Motore di ricerca",
+      "customTemplate": "Modello personalizzato (usa %s)",
+      "useFavicons": "Usa la favicon di ogni sito",
+      "backups": "Backup",
+      "makeBackup": "Crea backup",
+      "downloadFile": "Scarica file",
+      "restoreFile": "Ripristina file",
+      "done": "Fatto",
+      "noBackups": "Nessun backup salvato finora.",
+      "backupMeta": "{folders} cartelle · {links} link",
+      "backupAuto": " · automatico",
+      "restore": "Ripristina",
+      "deleteBackup": "Elimina questo backup",
+      "storageNoSave": "Questo browser non può salvare qui. Usa «Scarica file» per conservare una copia.",
+      "emptyDesktop": "Scrivania vuota. Tocca la matita per aggiungere collegamenti e cartelle.",
+      "newFolder": "Nuova cartella",
+      "folderEmpty": "Cartella vuota. Attiva la modalità modifica per aggiungere link.",
+      "add": "Aggiungi",
+      "openAria": "Apri {name}",
+      "removeAria": "Rimuovi",
+      "changeEngine": "Cambia motore di ricerca",
+      "promptFolderName": "Nome della nuova cartella",
+      "confirmDelete": "Eliminare «{name}» e i suoi {n} link?",
+      "confirmRestore": "La scrivania attuale sarà sostituita dal backup del {date}.\n\nPrima verrà salvata una copia di quello che hai ora. Continuare?",
+      "noChanges": "Non è cambiato nulla dall'ultimo backup, quindi non ne è stato creato uno nuovo.",
+      "importError": "Quel file non ha il formato previsto. Usane uno esportato da questa pagina.",
+      "desktop": "Scrivania",
+      "language": "Lingua",
+      "languageAuto": "Automatico",
+      "folderWork": "Lavoro",
+      "folderReading": "Lettura",
+      "folderMedia": "Media",
+      "linkMail": "Posta",
+      "linkCalendar": "Calendario"
+    },
+    "pt": {
+      "_name": "Português",
+      "_locale": "pt",
+      "appTitle": "Início",
+      "searchPlaceholder": "Pesquisar, indicar um endereço ou filtrar favoritos",
+      "searchLabel": "Pesquisar",
+      "edit": "Editar",
+      "editTitle": "Editar (E)",
+      "settings": "Definições",
+      "close": "Fechar",
+      "storageWarn": "Este navegador não deixa a página guardar dados, por isso as alterações perdem-se ao fechar. Sirva-a a partir de http://localhost ou do seu alojamento para que persistam.",
+      "hintSearch": "pesquisar",
+      "hintPick": "escolher favorito",
+      "hintNewTab": "novo separador",
+      "hintEdit": "editar",
+      "hintClose": "fechar pasta",
+      "emptyAll": "Mover tudo para o ambiente de trabalho",
+      "deleteFolder": "Eliminar pasta",
+      "newShortcut": "Novo atalho",
+      "editShortcut": "Editar atalho",
+      "fieldName": "Nome",
+      "fieldUrl": "Endereço",
+      "fieldLocation": "Localização",
+      "desktopLoose": "Ambiente de trabalho (solto)",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "urlPlaceholder": "exemplo.com",
+      "color": "Cor",
+      "ownColor": "Cor personalizada",
+      "hueLabel": "Tom {n}",
+      "style": "Estilo",
+      "modeAuto": "Automático",
+      "modeLight": "Claro",
+      "modeDark": "Escuro",
+      "autoDark": "Auto · escuro",
+      "autoLight": "Auto · claro",
+      "styleVivid": "Vivo",
+      "styleClassic": "Clássico",
+      "styleGlass": "Vidro",
+      "styleMinimal": "Mínimo",
+      "styleNordic": "Nórdico",
+      "engine": "Motor de busca",
+      "customTemplate": "Modelo próprio (use %s)",
+      "useFavicons": "Usar o favicon de cada site",
+      "backups": "Cópias de segurança",
+      "makeBackup": "Criar cópia",
+      "downloadFile": "Transferir ficheiro",
+      "restoreFile": "Restaurar ficheiro",
+      "done": "Concluído",
+      "noBackups": "Ainda não há nenhuma cópia guardada.",
+      "backupMeta": "{folders} pastas · {links} ligações",
+      "backupAuto": " · automática",
+      "restore": "Restaurar",
+      "deleteBackup": "Eliminar esta cópia",
+      "storageNoSave": "Este navegador não consegue guardar aqui. Use «Transferir ficheiro» para manter uma cópia.",
+      "emptyDesktop": "Ambiente de trabalho vazio. Toque no lápis para adicionar atalhos e pastas.",
+      "newFolder": "Nova pasta",
+      "folderEmpty": "Pasta vazia. Ative o modo de edição para adicionar ligações.",
+      "add": "Adicionar",
+      "openAria": "Abrir {name}",
+      "removeAria": "Remover",
+      "changeEngine": "Mudar de motor de busca",
+      "promptFolderName": "Nome da nova pasta",
+      "confirmDelete": "Eliminar «{name}» e as suas {n} ligações?",
+      "confirmRestore": "O seu ambiente de trabalho atual será substituído pela cópia de {date}.\n\nAntes será guardada uma cópia do que tem agora. Continuar?",
+      "noChanges": "Nada mudou desde a última cópia, por isso não foi criada nenhuma nova.",
+      "importError": "Esse ficheiro não tem o formato esperado. Use um exportado a partir desta página.",
+      "desktop": "Ambiente de trabalho",
+      "language": "Idioma",
+      "languageAuto": "Automático",
+      "folderWork": "Trabalho",
+      "folderReading": "Leitura",
+      "folderMedia": "Multimédia",
+      "linkMail": "Correio",
+      "linkCalendar": "Calendário"
+    },
+    "ru": {
+      "_name": "Русский",
+      "_locale": "ru",
+      "appTitle": "Главная",
+      "searchPlaceholder": "Найти, ввести адрес или отфильтровать закладки",
+      "searchLabel": "Поиск",
+      "edit": "Правка",
+      "editTitle": "Правка (E)",
+      "settings": "Настройки",
+      "close": "Закрыть",
+      "storageWarn": "Этот браузер не позволяет странице сохранять данные, поэтому изменения пропадут при закрытии. Откройте её через http://localhost или со своего хостинга, чтобы они сохранялись.",
+      "hintSearch": "поиск",
+      "hintPick": "выбрать закладку",
+      "hintNewTab": "новая вкладка",
+      "hintEdit": "правка",
+      "hintClose": "закрыть папку",
+      "emptyAll": "Вынести всё на рабочий стол",
+      "deleteFolder": "Удалить папку",
+      "newShortcut": "Новый ярлык",
+      "editShortcut": "Изменить ярлык",
+      "fieldName": "Название",
+      "fieldUrl": "Адрес",
+      "fieldLocation": "Расположение",
+      "desktopLoose": "Рабочий стол (отдельно)",
+      "cancel": "Отмена",
+      "save": "Сохранить",
+      "urlPlaceholder": "пример.рф",
+      "color": "Цвет",
+      "ownColor": "Свой цвет",
+      "hueLabel": "Оттенок {n}",
+      "style": "Стиль",
+      "modeAuto": "Автоматически",
+      "modeLight": "Светлая",
+      "modeDark": "Тёмная",
+      "autoDark": "Авто · тёмная",
+      "autoLight": "Авто · светлая",
+      "styleVivid": "Яркий",
+      "styleClassic": "Классический",
+      "styleGlass": "Стекло",
+      "styleMinimal": "Минимальный",
+      "styleNordic": "Северный",
+      "engine": "Поисковик",
+      "customTemplate": "Свой шаблон (используйте %s)",
+      "useFavicons": "Использовать фавикон каждого сайта",
+      "backups": "Резервные копии",
+      "makeBackup": "Создать копию",
+      "downloadFile": "Скачать файл",
+      "restoreFile": "Восстановить из файла",
+      "done": "Готово",
+      "noBackups": "Сохранённых копий пока нет.",
+      "backupMeta": "папок: {folders} · ссылок: {links}",
+      "backupAuto": " · автоматически",
+      "restore": "Восстановить",
+      "deleteBackup": "Удалить эту копию",
+      "storageNoSave": "Этот браузер не может здесь сохранять. Используйте «Скачать файл», чтобы сохранить копию.",
+      "emptyDesktop": "Рабочий стол пуст. Нажмите карандаш, чтобы добавить ярлыки и папки.",
+      "newFolder": "Новая папка",
+      "folderEmpty": "Папка пуста. Включите режим правки, чтобы добавить ссылки.",
+      "add": "Добавить",
+      "openAria": "Открыть {name}",
+      "removeAria": "Убрать",
+      "changeEngine": "Сменить поисковик",
+      "promptFolderName": "Название новой папки",
+      "confirmDelete": "Удалить «{name}» и ссылки внутри ({n})?",
+      "confirmRestore": "Текущий рабочий стол будет заменён копией от {date}.\n\nСначала сохранится копия того, что есть сейчас. Продолжить?",
+      "noChanges": "С момента последней копии ничего не изменилось, новая не создана.",
+      "importError": "Этот файл не в том формате. Используйте файл, выгруженный с этой страницы.",
+      "desktop": "Рабочий стол",
+      "language": "Язык",
+      "languageAuto": "Автоматически",
+      "folderWork": "Работа",
+      "folderReading": "Чтение",
+      "folderMedia": "Медиа",
+      "linkMail": "Почта",
+      "linkCalendar": "Календарь"
+    },
+    "zh": {
+      "_name": "中文",
+      "_locale": "zh-CN",
+      "appTitle": "主页",
+      "searchPlaceholder": "搜索、输入网址或筛选书签",
+      "searchLabel": "搜索",
+      "edit": "编辑",
+      "editTitle": "编辑 (E)",
+      "settings": "设置",
+      "close": "关闭",
+      "storageWarn": "此浏览器不允许本页保存数据，关闭后更改会丢失。请通过 http://localhost 或你自己的主机提供该页面以保留数据。",
+      "hintSearch": "搜索",
+      "hintPick": "选择书签",
+      "hintNewTab": "新标签页",
+      "hintEdit": "编辑",
+      "hintClose": "关闭文件夹",
+      "emptyAll": "全部移到桌面",
+      "deleteFolder": "删除文件夹",
+      "newShortcut": "新建快捷方式",
+      "editShortcut": "编辑快捷方式",
+      "fieldName": "名称",
+      "fieldUrl": "网址",
+      "fieldLocation": "位置",
+      "desktopLoose": "桌面（独立）",
+      "cancel": "取消",
+      "save": "保存",
+      "urlPlaceholder": "example.com",
+      "color": "颜色",
+      "ownColor": "自定义颜色",
+      "hueLabel": "色相 {n}",
+      "style": "风格",
+      "modeAuto": "自动",
+      "modeLight": "浅色",
+      "modeDark": "深色",
+      "autoDark": "自动 · 深色",
+      "autoLight": "自动 · 浅色",
+      "styleVivid": "鲜明",
+      "styleClassic": "经典",
+      "styleGlass": "玻璃",
+      "styleMinimal": "极简",
+      "styleNordic": "北欧",
+      "engine": "搜索引擎",
+      "customTemplate": "自定义模板（使用 %s）",
+      "useFavicons": "使用各网站的图标",
+      "backups": "备份",
+      "makeBackup": "创建备份",
+      "downloadFile": "下载文件",
+      "restoreFile": "从文件恢复",
+      "done": "完成",
+      "noBackups": "尚无已保存的备份。",
+      "backupMeta": "{folders} 个文件夹 · {links} 个链接",
+      "backupAuto": " · 自动",
+      "restore": "恢复",
+      "deleteBackup": "删除此备份",
+      "storageNoSave": "此浏览器无法在此保存。请使用“下载文件”保留副本。",
+      "emptyDesktop": "桌面为空。点击铅笔添加快捷方式和文件夹。",
+      "newFolder": "新建文件夹",
+      "folderEmpty": "文件夹为空。开启编辑模式以添加链接。",
+      "add": "添加",
+      "openAria": "打开 {name}",
+      "removeAria": "移除",
+      "changeEngine": "切换搜索引擎",
+      "promptFolderName": "新文件夹名称",
+      "confirmDelete": "删除“{name}”及其中的 {n} 个链接？",
+      "confirmRestore": "当前桌面将被 {date} 的备份替换。\n\n系统会先保存当前内容的副本。是否继续？",
+      "noChanges": "自上次备份以来没有变化，因此未创建新备份。",
+      "importError": "该文件格式不正确。请使用从本页导出的文件。",
+      "desktop": "桌面",
+      "language": "语言",
+      "languageAuto": "自动",
+      "folderWork": "工作",
+      "folderReading": "阅读",
+      "folderMedia": "影音",
+      "linkMail": "邮件",
+      "linkCalendar": "日历"
+    }
+  };
+
+  var FALLBACK = "en";
+  var lang = FALLBACK;
+
+  // "auto" -> primer idioma del navegador que tengamos traducido
+  function resolveLang(pref) {
+    if (pref && pref !== "auto" && I18N[pref]) return pref;
+    var list = navigator.languages || [navigator.language || ""];
+    for (var i = 0; i < list.length; i++) {
+      var code = String(list[i]).toLowerCase();
+      if (I18N[code]) return code;
+      var corto = code.split("-")[0];
+      if (I18N[corto]) return corto;
+    }
+    return FALLBACK;
+  }
+
+  // t("confirmDelete", {name: "X", n: 3})
+  function t(key, vars) {
+    var dict = I18N[lang] || I18N[FALLBACK];
+    var txt = dict[key];
+    if (txt === undefined) txt = I18N[FALLBACK][key];
+    if (txt === undefined) return key;
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        txt = txt.split("{" + k + "}").join(vars[k]);
+      });
+    }
+    return txt;
+  }
+
+  // recorre el DOM y rellena todo lo marcado con data-i18n*
+  function applyI18n() {
+    document.documentElement.lang = lang;
+    var mapa = [["data-i18n", "text"], ["data-i18n-title", "title"],
+                ["data-i18n-aria", "aria-label"], ["data-i18n-placeholder", "placeholder"]];
+    mapa.forEach(function (par) {
+      var nodos = document.querySelectorAll("[" + par[0] + "]");
+      Array.prototype.forEach.call(nodos, function (el) {
+        var valor = t(el.getAttribute(par[0]));
+        if (par[1] === "text") el.textContent = valor;
+        else el.setAttribute(par[1], valor);
+      });
+    });
+    document.title = t("appTitle");
+  }
 
   /* ---------------- almacenamiento ---------------- */
   var KEY = "inicio.v1";
@@ -967,71 +1628,34 @@
 
   function uid() { return Math.random().toString(36).slice(2, 9); }
 
-  var DEFAULT = {
-    version: 2, engine: "ddg", custom: "", favicons: false, mode: "auto", hue: 172, style: "material",
-    items: [
-      { kind: "folder", id: uid(), name: "Infraestructura", links: [
-        { id: uid(), name: "Proxmox", url: "https://proxmox.local:8006" },
-        { id: uid(), name: "Panel hosting", url: "https://localhost:8083" }
+  // mismo conjunto inicial para la primera visita y para la demo, con nombres traducidos
+  function starterItems() {
+    return [
+      { kind: "folder", id: uid(), name: t("folderWork"), links: [
+        { id: uid(), name: "GitHub", url: "https://github.com" },
+        { id: uid(), name: "GitLab", url: "https://gitlab.com" },
+        { id: uid(), name: "Stack Overflow", url: "https://stackoverflow.com" },
+        { id: uid(), name: "MDN", url: "https://developer.mozilla.org" }
       ]},
-      { kind: "folder", id: uid(), name: "Seguridad", links: [
-        { id: uid(), name: "CVE", url: "https://www.cve.org" },
-        { id: uid(), name: "NVD", url: "https://nvd.nist.gov" },
-        { id: uid(), name: "INCIBE", url: "https://www.incibe.es" }
+      { kind: "folder", id: uid(), name: t("folderReading"), links: [
+        { id: uid(), name: "Hacker News", url: "https://news.ycombinator.com" },
+        { id: uid(), name: "Wikipedia", url: "https://wikipedia.org" },
+        { id: uid(), name: "Lobsters", url: "https://lobste.rs" }
       ]},
-      { kind: "link", id: uid(), name: "Correo", url: "https://mail.proton.me" },
-      { kind: "link", id: uid(), name: "Hacker News", url: "https://news.ycombinator.com" }
-    ]
-  };
-
-  // convierte el formato antiguo (solo carpetas) al nuevo (rejilla mixta)
-  function migrate(s) {
-    if (!s || typeof s !== "object") return null;
-    if (!s.items) {
-      if (!s.folders) return null;
-      s.items = s.folders.map(function (f) {
-        return { kind: "folder", id: f.id || uid(), name: f.name || "Carpeta", links: f.links || [] };
-      });
-    }
-    s.items = (s.items || []).filter(Boolean).map(function (it) {
-      if (it.kind === "link") return { kind: "link", id: it.id || uid(), name: it.name, url: it.url };
-      return { kind: "folder", id: it.id || uid(), name: it.name || "Carpeta", links: it.links || [] };
-    });
-    delete s.folders;
-    s.version = 2;
-    if (typeof s.hue !== "number") s.hue = 172;
-    if (["auto", "light", "dark"].indexOf(s.mode) < 0) s.mode = "auto";
-    if (s.style === "elegante") s.style = "clasico";
-    if (["material", "clasico", "cristal", "minimo", "nordico"].indexOf(s.style) < 0) s.style = "material";
-    if (!s.engine || !ENGINES[s.engine]) s.engine = "ddg";
-    return s;
+      { kind: "link", id: uid(), name: t("linkMail"), url: "https://mail.proton.me" },
+      { kind: "folder", id: uid(), name: t("folderMedia"), links: [
+        { id: uid(), name: "YouTube", url: "https://youtube.com" },
+        { id: uid(), name: "Bandcamp", url: "https://bandcamp.com" }
+      ]},
+      { kind: "link", id: uid(), name: t("linkCalendar"), url: "https://calendar.proton.me" },
+      { kind: "link", id: uid(), name: "Mastodon", url: "https://mastodon.social" }
+    ];
   }
 
-  // conjunto de ejemplo para la demo publica y para las capturas
-  var DEMO = {
-    version: 2, engine: "ddg", custom: "", favicons: false, mode: "auto", hue: 172, style: "material",
-    items: [
-      { kind: "folder", id: "d1", name: "Trabajo", links: [
-        { id: "d11", name: "GitHub", url: "https://github.com" },
-        { id: "d12", name: "GitLab", url: "https://gitlab.com" },
-        { id: "d13", name: "Stack Overflow", url: "https://stackoverflow.com" },
-        { id: "d14", name: "MDN", url: "https://developer.mozilla.org" },
-        { id: "d15", name: "Notion", url: "https://notion.so" }
-      ]},
-      { kind: "folder", id: "d2", name: "Lectura", links: [
-        { id: "d21", name: "Hacker News", url: "https://news.ycombinator.com" },
-        { id: "d22", name: "Wikipedia", url: "https://wikipedia.org" },
-        { id: "d23", name: "Lobsters", url: "https://lobste.rs" }
-      ]},
-      { kind: "link", id: "d3", name: "Correo", url: "https://mail.proton.me" },
-      { kind: "folder", id: "d4", name: "Multimedia", links: [
-        { id: "d41", name: "YouTube", url: "https://youtube.com" },
-        { id: "d42", name: "Bandcamp", url: "https://bandcamp.com" }
-      ]},
-      { kind: "link", id: "d5", name: "Calendario", url: "https://calendar.proton.me" },
-      { kind: "link", id: "d6", name: "Mastodon", url: "https://mastodon.social" }
-    ]
-  };
+  function freshState() {
+    return { version: 2, engine: "ddg", custom: "", favicons: false,
+             mode: "auto", hue: 172, style: "material", lang: "auto", items: starterItems() };
+  }
 
   /* ---------------- parametros de URL ----------------
      ?demo=1                 carga el conjunto de ejemplo y desactiva el guardado
@@ -1042,13 +1666,17 @@
   var params = new URLSearchParams(window.location.search);
   var demo = params.get("demo") === "1";
 
-  var state = demo ? JSON.parse(JSON.stringify(DEMO)) : (migrate(loadRaw()) || DEFAULT);
+  var guardado = migrate(loadRaw());
+  lang = resolveLang(params.get("lang") || (guardado && guardado.lang) || "auto");
 
+  var state = (demo || !guardado) ? freshState() : guardado;
+
+  if (params.get("lang")) state.lang = params.get("lang");
   if (params.get("style")) state.style = params.get("style");
   if (params.get("mode")) state.mode = params.get("mode");
   var pHue = parseInt(params.get("hue"), 10);
   if (!isNaN(pHue)) state.hue = ((pHue % 360) + 360) % 360;
-  state = migrate(state) || DEFAULT;
+  state = migrate(state) || freshState();
 
   function folders() { return state.items.filter(function (i) { return i.kind === "folder"; }); }
   function looseLinks() { return state.items.filter(function (i) { return i.kind === "link"; }); }
@@ -1080,7 +1708,8 @@
 
   function autoLabel(resolved) {
     var b = document.querySelector('#modes button[data-mode="auto"]');
-    if (b) b.textContent = state.mode === "auto" ? "Auto · " + (resolved === "dark" ? "oscuro" : "claro") : "Automático";
+    if (b) b.textContent = state.mode !== "auto" ? t("modeAuto")
+                          : (resolved === "dark" ? t("autoDark") : t("autoLight"));
   }
 
   function applyTheme() {
@@ -1213,7 +1842,7 @@
     if (!state.items.length) {
       var empty = document.createElement("p");
       empty.className = "empty-desktop";
-      empty.textContent = "Escritorio vacío. Pulsa el lápiz para añadir accesos y carpetas.";
+      empty.textContent = t("emptyDesktop");
       gridEl.appendChild(empty);
     }
 
@@ -1224,7 +1853,7 @@
     var addLink = document.createElement("button");
     addLink.className = "tile new-tile";
     var f1 = document.createElement("span"); f1.className = "face"; f1.textContent = "+";
-    var l1 = document.createElement("span"); l1.className = "tile-label"; l1.textContent = "Nuevo acceso";
+    var l1 = document.createElement("span"); l1.className = "tile-label"; l1.textContent = t("newShortcut");
     addLink.appendChild(f1); addLink.appendChild(l1);
     addLink.addEventListener("click", function () { openLinkDialog(null, "desktop"); });
     gridEl.appendChild(addLink);
@@ -1232,7 +1861,7 @@
     var addFolder = document.createElement("button");
     addFolder.className = "tile new-tile";
     var f2 = document.createElement("span"); f2.className = "face"; f2.textContent = "+";
-    var l2 = document.createElement("span"); l2.className = "tile-label"; l2.textContent = "Nueva carpeta";
+    var l2 = document.createElement("span"); l2.className = "tile-label"; l2.textContent = t("newFolder");
     addFolder.appendChild(f2); addFolder.appendChild(l2);
     addFolder.addEventListener("click", newFolder);
     gridEl.appendChild(addFolder);
@@ -1245,6 +1874,12 @@
     el.draggable = true;
 
     el.addEventListener("dragstart", function (ev) {
+      // un <a href> arrastra su URL de forma nativa y eso pisa la reordenación;
+      // quitamos el href mientras dura el arrastre y lo restauramos al soltar
+      if (el.tagName === "A" && el.getAttribute("href")) {
+        el.dataset.href = el.getAttribute("href");
+        el.removeAttribute("href");
+      }
       dragItem = item.id;
       if (item.kind === "link") dragLink = item.id;
       el.classList.add("dragging");
@@ -1252,6 +1887,7 @@
       ev.dataTransfer.setData("text/plain", item.id);
     });
     el.addEventListener("dragend", function () {
+      if (el.dataset.href) { el.setAttribute("href", el.dataset.href); delete el.dataset.href; }
       dragItem = null; dragLink = null;
       el.classList.remove("dragging");
       el.classList.remove("drop-target");
@@ -1262,7 +1898,7 @@
 
   function folderTile(item, idx) {
     var el = baseTile(item, idx);
-    el.setAttribute("aria-label", "Abrir " + item.name);
+    el.setAttribute("aria-label", t("openAria", { name: item.name }));
 
     var face = document.createElement("span");
     face.className = "face folder";
@@ -1292,10 +1928,10 @@
     var del = document.createElement("button");
     del.className = "tile-del";
     del.textContent = "×";
-    del.title = "Borrar carpeta";
+    del.title = t("deleteFolder");
     del.addEventListener("click", function (ev) {
       ev.preventDefault(); ev.stopPropagation();
-      if (window.confirm("¿Borrar “" + item.name + "” y sus " + item.links.length + " enlaces?")) {
+      if (window.confirm(t("confirmDelete", { name: item.name, n: item.links.length }))) {
         state.items = state.items.filter(function (x) { return x.id !== item.id; });
         commit();
       }
@@ -1339,7 +1975,7 @@
     var del = document.createElement("button");
     del.className = "tile-del";
     del.textContent = "×";
-    del.title = "Quitar";
+    del.title = t("removeAria");
     del.addEventListener("click", function (ev) {
       ev.preventDefault(); ev.stopPropagation();
       state.items = state.items.filter(function (x) { return x.id !== item.id; });
@@ -1364,10 +2000,13 @@
     el.addEventListener("drop", function (ev) {
       ev.preventDefault(); ev.stopPropagation();
       el.classList.remove("drop-target");
-      if (dragItem && state.items.some(function (x) { return x.id === dragItem; })) {
-        reorderItem(dragItem, item.id);
+      if (!dragItem && !dragLink) return;
+      var arrastrado = dragItem || dragLink;
+      // ¿lo que arrastro ya está en el escritorio? -> reordenar
+      if (state.items.some(function (x) { return x.id === arrastrado; })) {
+        reorderItem(arrastrado, item.id);
       } else if (dragLink) {
-        moveToDesktop(dragLink, item.id);   // sale de una carpeta y aterriza aquí
+        moveToDesktop(dragLink, item.id);   // venía de dentro de una carpeta
       }
     });
 
@@ -1393,7 +2032,7 @@
   });
 
   function newFolder() {
-    var v = window.prompt("Nombre de la carpeta nueva", "");
+    var v = window.prompt(t("promptFolderName"), "");
     if (v && v.trim()) {
       state.items.push({ kind: "folder", id: uid(), name: v.trim(), links: [] });
       commit();
@@ -1478,7 +2117,7 @@
     if (!f.links.length) {
       var note = document.createElement("p");
       note.className = "empty-note";
-      note.textContent = "Carpeta vacía. Activa el modo edición para añadir enlaces.";
+      note.textContent = t("folderEmpty");
       appsEl.appendChild(note);
     }
 
@@ -1503,7 +2142,7 @@
       var del = document.createElement("button");
       del.className = "app-del";
       del.textContent = "×";
-      del.title = "Quitar";
+      del.title = t("removeAria");
       del.addEventListener("click", function (ev) {
         ev.preventDefault(); ev.stopPropagation();
         f.links = f.links.filter(function (x) { return x.id !== l.id; });
@@ -1542,7 +2181,7 @@
     aic.textContent = "+";
     var alb = document.createElement("span");
     alb.className = "app-label";
-    alb.textContent = "Añadir";
+    alb.textContent = t("add");
     add.appendChild(aic); add.appendChild(alb);
     add.addEventListener("click", function () { openLinkDialog(null, f.id); });
     appsEl.appendChild(add);
@@ -1587,7 +2226,7 @@
   document.getElementById("delFolder").addEventListener("click", function () {
     var f = currentFolder();
     if (!f) return;
-    if (window.confirm("¿Borrar “" + f.name + "” y sus " + f.links.length + " enlaces?")) {
+    if (window.confirm(t("confirmDelete", { name: f.name, n: f.links.length }))) {
       state.items = state.items.filter(function (x) { return x.id !== f.id; });
       save(); closeFolder(); render();
     }
@@ -1599,7 +2238,7 @@
 
   function openLinkDialog(link, location) {
     editingId = link ? link.id : null;
-    document.getElementById("linkDlgTitle").textContent = link ? "Editar acceso" : "Nuevo acceso";
+    document.getElementById("linkDlgTitle").textContent = link ? t("editShortcut") : t("newShortcut");
     document.getElementById("lName").value = link ? link.name : "";
     document.getElementById("lUrl").value = link ? link.url : "";
 
@@ -1607,7 +2246,7 @@
     sel.textContent = "";
     var opt = document.createElement("option");
     opt.value = "desktop";
-    opt.textContent = "Escritorio (suelto)";
+    opt.textContent = t("desktopLoose");
     sel.appendChild(opt);
     folders().forEach(function (f) {
       var o = document.createElement("option");
@@ -1662,7 +2301,7 @@
   function allLinks() {
     var out = [];
     state.items.forEach(function (i) {
-      if (i.kind === "link") out.push({ where: "Escritorio", link: i });
+      if (i.kind === "link") out.push({ where: t("desktop"), link: i });
       else i.links.forEach(function (l) { out.push({ where: i.name, link: l }); });
     });
     return out;
@@ -1746,7 +2385,7 @@
     return storeBackups(list) ? list[0] : null;
   }
   function formatWhen(ts) {
-    return new Date(ts).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    return new Date(ts).toLocaleString(I18N[lang]._locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   }
 
   function paintBackups() {
@@ -1754,9 +2393,16 @@
     if (!persistent) {
       var p = document.createElement("li");
       p.style.fontSize = "12.5px"; p.style.color = "var(--muted)";
-      p.textContent = "El navegador no permite guardar aquí. Usa «Descargar fichero» para conservar una copia.";
+      p.className = "vacio";
+      p.textContent = t("storageNoSave");
       backupsEl.appendChild(p);
       return;
+    }
+    if (persistent && !loadBackups().length) {
+      var vacio = document.createElement("li");
+      vacio.className = "vacio";
+      vacio.textContent = t("noBackups");
+      backupsEl.appendChild(vacio);
     }
     loadBackups().forEach(function (bk, i) {
       var data = migrate(JSON.parse(JSON.stringify(bk.data)));
@@ -1769,7 +2415,7 @@
       var meta = document.createElement("div");
       meta.className = "meta";
       var nf = data.items.filter(function (x) { return x.kind === "folder"; }).length;
-      meta.textContent = nf + " carpetas · " + totalLinks(data) + " enlaces" + (bk.auto ? " · automática" : "");
+      meta.textContent = t("backupMeta", { folders: nf, links: totalLinks(data) }) + (bk.auto ? t("backupAuto") : "");
       info.appendChild(when); info.appendChild(meta);
 
       var sp = document.createElement("div");
@@ -1777,10 +2423,9 @@
 
       var restore = document.createElement("button");
       restore.className = "mini-btn";
-      restore.textContent = "Restaurar";
+      restore.textContent = t("restore");
       restore.addEventListener("click", function () {
-        if (!window.confirm("Se sustituirá tu escritorio actual por la copia del " + formatWhen(bk.at) +
-                            ".\n\nAntes se guardará una copia de lo que tienes ahora. ¿Continuar?")) return;
+        if (!window.confirm(t("confirmRestore", { date: formatWhen(bk.at) }))) return;
         makeBackup(true);
         state = migrate(JSON.parse(JSON.stringify(bk.data))) || DEFAULT;
         save(); applyTheme(); engineLabel(); render();
@@ -1791,7 +2436,7 @@
       var del = document.createElement("button");
       del.className = "mini-btn";
       del.textContent = "×";
-      del.title = "Borrar esta copia";
+      del.title = t("deleteBackup");
       del.addEventListener("click", function () {
         var list = loadBackups();
         list.splice(i, 1);
@@ -1808,7 +2453,7 @@
   document.getElementById("bMake").addEventListener("click", function () {
     var made = makeBackup(false);
     paintBackups();
-    if (!made) window.alert("No hay cambios desde la última copia, así que no se ha creado ninguna nueva.");
+    if (!made) window.alert(t("noChanges"));
   });
 
   (function autoBackup() {
@@ -1828,6 +2473,31 @@
     cEngine.appendChild(o);
   });
 
+  // selector de idioma
+  var cLang = document.getElementById("cLang");
+  var optAuto = document.createElement("option");
+  optAuto.value = "auto";
+  cLang.appendChild(optAuto);
+  Object.keys(I18N).forEach(function (code) {
+    var o = document.createElement("option");
+    o.value = code; o.textContent = I18N[code]._name;
+    cLang.appendChild(o);
+  });
+  cLang.addEventListener("change", function () {
+    state.lang = cLang.value;
+    lang = resolveLang(state.lang);
+    save(); applyI18n(); paintUiText(); render();
+    if (openId) paintApps();
+  });
+
+  // textos generados por JS que hay que repintar al cambiar de idioma
+  function paintUiText() {
+    optAuto.textContent = t("languageAuto");
+    cLang.value = state.lang || "auto";
+    paintModes(); paintStyles(); applyTheme();
+    pickerWrap.title = t("ownColor");
+  }
+
   var PALETTE = [172, 210, 258, 300, 22, 62, 128];
   var seedsEl = document.getElementById("seeds");
   PALETTE.forEach(function (h) {
@@ -1835,17 +2505,17 @@
     b.className = "seed";
     b.style.background = "oklch(0.72 0.15 " + h + ")";
     b.dataset.hue = h;
-    b.setAttribute("aria-label", "Tono " + h);
+    b.setAttribute("aria-label", t("hueLabel", { n: h }));
     b.addEventListener("click", function () { state.hue = h; applyTheme(); save(); paintSeeds(); });
     seedsEl.appendChild(b);
   });
   var pickerWrap = document.createElement("span");
   pickerWrap.className = "seed-picker";
-  pickerWrap.title = "Color propio";
+  pickerWrap.title = t("ownColor");
   var picker = document.createElement("input");
   picker.type = "color";
   picker.value = "#3fbfb0";
-  picker.setAttribute("aria-label", "Elegir un color propio");
+  picker.setAttribute("aria-label", t("ownColor"));
   picker.addEventListener("input", function () {
     state.hue = hexToHue(picker.value);
     applyTheme(); save(); paintSeeds();
@@ -1927,7 +2597,7 @@
         ev.target.value = "";
         cfgDlg.close();
       } catch (e) {
-        window.alert("Ese fichero no tiene el formato esperado. Usa uno exportado desde esta misma página.");
+        window.alert(t("importError"));
       }
     };
     r.readAsText(file);
@@ -1946,7 +2616,7 @@
     document.getElementById("time").textContent =
       String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
     document.getElementById("date").textContent =
-      d.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+      d.toLocaleDateString(I18N[lang]._locale, { weekday: "long", day: "numeric", month: "long" });
   }
   tick();
   window.setInterval(tick, 15000);
@@ -1964,6 +2634,8 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
+  applyI18n();
+  paintUiText();
   applyTheme();
   engineLabel();
   render();
