@@ -1628,6 +1628,30 @@
 
   function uid() { return Math.random().toString(36).slice(2, 9); }
 
+  // convierte cualquier estado guardado (formatos antiguos incluidos) al formato actual
+  function migrate(s) {
+    if (!s || typeof s !== "object") return null;
+    if (!s.items) {
+      if (!s.folders) return null;
+      s.items = s.folders.map(function (f) {
+        return { kind: "folder", id: f.id || uid(), name: f.name || "Carpeta", links: f.links || [] };
+      });
+    }
+    s.items = (s.items || []).filter(Boolean).map(function (it) {
+      if (it.kind === "link") return { kind: "link", id: it.id || uid(), name: it.name, url: it.url };
+      return { kind: "folder", id: it.id || uid(), name: it.name || "Carpeta", links: it.links || [] };
+    });
+    delete s.folders;
+    s.version = 2;
+    if (typeof s.hue !== "number") s.hue = 172;
+    if (["auto", "light", "dark"].indexOf(s.mode) < 0) s.mode = "auto";
+    if (s.lang !== "auto" && !I18N[s.lang]) s.lang = "auto";
+    if (s.style === "elegante") s.style = "clasico";
+    if (["material", "clasico", "cristal", "minimo", "nordico"].indexOf(s.style) < 0) s.style = "material";
+    if (!s.engine || !ENGINES[s.engine]) s.engine = "ddg";
+    return s;
+  }
+
   // mismo conjunto inicial para la primera visita y para la demo, con nombres traducidos
   function starterItems() {
     return [
@@ -2427,7 +2451,7 @@
       restore.addEventListener("click", function () {
         if (!window.confirm(t("confirmRestore", { date: formatWhen(bk.at) }))) return;
         makeBackup(true);
-        state = migrate(JSON.parse(JSON.stringify(bk.data))) || DEFAULT;
+        state = migrate(JSON.parse(JSON.stringify(bk.data))) || freshState();
         save(); applyTheme(); engineLabel(); render();
         if (openId) closeFolder();
         paintBackups();
