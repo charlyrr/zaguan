@@ -184,14 +184,31 @@
   body.editing .tile, body.editing .app { touch-action: none; user-select: none; -webkit-user-select: none; }
   .tile img, .app img { -webkit-user-drag: none; user-drag: none; }
 
-  /* copia del icono que sigue al puntero */
-  .drag-ghost {
-    position: fixed; z-index: 300;
-    margin: 0; pointer-events: none;
-    transform: translate(-50%, -50%) scale(1.12) rotate(-2deg);
-    filter: drop-shadow(0 14px 26px oklch(0.08 0.03 var(--hue) / 0.6));
-    opacity: .92;
+  /* Copia del icono que sigue al puntero.
+     Lleva !important porque los estilos ponen position:relative a .face.single
+     con más especificidad, y eso sacaba el fantasma del viewport. */
+  html body .drag-ghost {
+    position: fixed !important;
+    left: 0; top: 0;
+    z-index: 300;
+    margin: 0 !important;
+    pointer-events: none;
+    transition: none !important;
+    animation: none !important;
+    will-change: transform;
+    filter: drop-shadow(0 16px 28px oklch(0.08 0.03 var(--hue) / 0.55));
+    opacity: .95;
   }
+
+  /* los iconos se apartan para abrir hueco donde va a caer el que arrastras */
+  .tile, .app { transition: transform .18s var(--ease); }
+  .tile.shift-before { transform: translateX(14px); }
+  .tile.shift-after  { transform: translateX(-14px); }
+  .app.shift-before  { transform: translateX(12px); }
+  .app.shift-after   { transform: translateX(-12px); }
+
+  /* la carpeta que recibirá el enlace se hincha */
+  .tile.drop-into .face { border-color: var(--primary); transform: scale(1.14); }
 
   .face {
     position: relative;
@@ -202,7 +219,7 @@
   }
   .tile:hover .face { transform: translateY(-4px) scale(1.05); }
   .tile:active .face { transform: scale(0.94); }
-  .tile.drop-target .face { border-color: var(--primary); transform: scale(1.12); }
+
 
   /* carpeta: rejilla 2x2 de miniaturas */
   .face.folder {
@@ -1885,11 +1902,15 @@
       drag.ghost.classList.add("drag-ghost");
       drag.ghost.style.width = r.width + "px";
       drag.ghost.style.height = r.height + "px";
+      // se agarra por el punto exacto donde pinchaste, no por el centro
+      drag.offX = drag.x0 - r.left;
+      drag.offY = drag.y0 - r.top;
       document.body.appendChild(drag.ghost);
     }
     ev.preventDefault();
-    drag.ghost.style.left = ev.clientX + "px";
-    drag.ghost.style.top = ev.clientY + "px";
+    drag.ghost.style.transform =
+      "translate(" + (ev.clientX - drag.offX) + "px," + (ev.clientY - drag.offY) + "px) " +
+      "scale(1.1) rotate(-2deg)";
     marcarDestino(ev.clientX, ev.clientY);
   }
 
@@ -1905,6 +1926,17 @@
       if (d < mejorD) { mejorD = d; mejor = nodos[i]; despues = x > cx; }
     }
     return mejor ? { el: mejor, despues: despues, dist: Math.sqrt(mejorD) } : null;
+  }
+
+  function esCarpetaArrastrada() {
+    return state.items.some(function (x) { return x.id === drag.id && x.kind === "folder"; });
+  }
+
+  function limpiarMarcas() {
+    var m = document.querySelectorAll(".drop-into, .shift-before, .shift-after");
+    Array.prototype.forEach.call(m, function (el) {
+      el.classList.remove("drop-into", "shift-before", "shift-after");
+    });
   }
 
   function marcarDestino(x, y) {
@@ -1928,12 +1960,19 @@
       if (c) { t = c.el; despues = c.despues; }
     }
 
-    if (drag.destino !== t) {
-      if (drag.destino) drag.destino.classList.remove("drop-target");
-      if (t) t.classList.add("drop-target");
+    var modo = (t && t.dataset.dragKind === "folder" && t === exacto && !esCarpetaArrastrada())
+             ? "into" : "reorder";
+
+    if (drag.destino !== t || drag.modo !== modo || drag.despues !== despues) {
+      limpiarMarcas();
+      if (t) {
+        if (modo === "into") t.classList.add("drop-into");
+        else t.classList.add(despues ? "shift-after" : "shift-before");
+      }
       drag.destino = t;
+      drag.modo = modo;
+      drag.despues = despues;
     }
-    drag.despues = despues;
 
     var zona = null;
     if (bajo === scrim) zona = "scrim";
@@ -1951,7 +1990,7 @@
     drag = null;
     if (d.ghost) d.ghost.remove();
     d.el.classList.remove("dragging");
-    if (d.destino) d.destino.classList.remove("drop-target");
+    limpiarMarcas();
     gridEl.classList.remove("drop-here");
     scrim.classList.remove("drop-here");
     if (!d.activo) return;                 // fue un clic normal
@@ -1977,10 +2016,10 @@
       var destId = d.destino.dataset.dragId;
       var destKind = d.destino.dataset.dragKind;
 
-      if (destKind === "app") {                       // reordenar dentro de la carpeta abierta
+      if (d.modo === "into") {
+        moveToFolder(d.id, destId, null);             // soltado justo encima de la carpeta
+      } else if (destKind === "app") {                // reordenar dentro de la carpeta abierta
         moveToFolder(d.id, openId, refSiguiente(destId, d.despues));
-      } else if (destKind === "folder" && !esCarpeta && !d.despues) {
-        moveToFolder(d.id, destId, null);             // meter un enlace en la carpeta
       } else if (enEscritorio) {
         reorderItem(d.id, destId, d.despues);         // reordenar en el escritorio
       } else {
@@ -2727,7 +2766,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.4.0";
+  var VERSION = "1.5.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
