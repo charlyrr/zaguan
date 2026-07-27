@@ -1935,7 +1935,11 @@
   function limpiarMarcas() {
     var m = document.querySelectorAll(".drop-into, .shift-before, .shift-after");
     Array.prototype.forEach.call(m, function (el) {
+      // se corta la transición para que la medida del FLIP sea la posición real
+      el.style.transition = "none";
       el.classList.remove("drop-into", "shift-before", "shift-after");
+      void el.offsetWidth;
+      el.style.transition = "";
     });
   }
 
@@ -1988,7 +1992,12 @@
     if (!drag) return;
     var d = drag;
     drag = null;
-    if (d.ghost) d.ghost.remove();
+    if (d.ghost) {
+      // el icono aterrizará deslizándose desde donde lo has soltado, no desde su hueco viejo
+      var gr = d.ghost.getBoundingClientRect();
+      aterrizaje = { id: d.id, x: gr.left, y: gr.top };
+      d.ghost.remove();
+    }
     d.el.classList.remove("dragging");
     limpiarMarcas();
     gridEl.classList.remove("drop-here");
@@ -2056,9 +2065,48 @@
     commit();
   }
 
+  var entradaHecha = false;   // la animación de aparición solo en la primera carga
+
+  function sinMovimiento() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  // FLIP: mide dónde está cada icono, repinta, y lo anima desde la posición vieja
+  function medirIconos() {
+    var m = {};
+    var nodos = document.querySelectorAll("[data-drag-id]");
+    Array.prototype.forEach.call(nodos, function (el) {
+      var r = el.getBoundingClientRect();
+      m[el.dataset.dragId] = { x: r.left, y: r.top };
+    });
+    return m;
+  }
+
+  var aterrizaje = null;
+
+  function deslizarDesde(antes) {
+    var nodos = document.querySelectorAll("[data-drag-id]");
+    Array.prototype.forEach.call(nodos, function (el) {
+      var a = antes[el.dataset.dragId];
+      if (aterrizaje && aterrizaje.id === el.dataset.dragId) a = aterrizaje;
+      if (!a) return;                            // icono nuevo: aparece sin deslizar
+      var r = el.getBoundingClientRect();
+      var dx = a.x - r.left, dy = a.y - r.top;
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+      el.animate(
+        [{ transform: "translate(" + dx + "px," + dy + "px)" }, { transform: "none" }],
+        { duration: 280, easing: "cubic-bezier(0.2, 0.9, 0.25, 1.05)" }
+      );
+    });
+    aterrizaje = null;
+  }
+
   function commit() {
-    save(); render();
+    var antes = sinMovimiento() ? null : medirIconos();
+    save();
+    render();
     if (openId) paintApps();
+    if (antes) deslizarDesde(antes);
   }
 
   /* ---------------- escritorio ---------------- */
@@ -2093,12 +2141,15 @@
     addFolder.appendChild(f2); addFolder.appendChild(l2);
     addFolder.addEventListener("click", newFolder);
     gridEl.appendChild(addFolder);
+    entradaHecha = true;
   }
 
   function baseTile(item, idx) {
     var el = document.createElement(item.kind === "folder" ? "button" : "a");
     el.className = "tile";
-    el.style.animationDelay = (idx * 40) + "ms";
+    // sin esto, cada repintado relanza la aparición y se ve un parpadeo
+    if (entradaHecha) el.style.animation = "none";
+    else el.style.animationDelay = (idx * 40) + "ms";
     el.draggable = false;                 // los <a> se arrastran solos: hay que desactivarlo
     el.dataset.dragId = item.id;
     el.dataset.dragKind = item.kind;
@@ -2766,7 +2817,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.5.0";
+  var VERSION = "1.6.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
