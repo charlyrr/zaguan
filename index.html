@@ -178,7 +178,20 @@
     animation: rise .45s var(--ease) backwards;
   }
   @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
-  .tile.dragging { opacity: .35; }
+  .tile.dragging, .app.dragging { opacity: .28; }
+
+  /* en modo edición el gesto es arrastrar, no desplazar ni seleccionar */
+  body.editing .tile, body.editing .app { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .tile img, .app img { -webkit-user-drag: none; user-drag: none; }
+
+  /* copia del icono que sigue al puntero */
+  .drag-ghost {
+    position: fixed; z-index: 300;
+    margin: 0; pointer-events: none;
+    transform: translate(-50%, -50%) scale(1.12) rotate(-2deg);
+    filter: drop-shadow(0 14px 26px oklch(0.08 0.03 var(--hue) / 0.6));
+    opacity: .92;
+  }
 
   .face {
     position: relative;
@@ -411,6 +424,7 @@
               transition: background .2s var(--ease), color .2s var(--ease); }
   .mini-btn:hover { background: var(--primary); color: var(--on-primary); }
   .backup-tools { display: flex; flex-wrap: wrap; gap: 7px; }
+  .version { margin: 14px 0 0; text-align: center; font-size: 11px; color: var(--muted); opacity: .75; }
 
   .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
   .dialog-actions button { height: 44px; padding: 0 20px; border-radius: 999px; font-size: 14px;
@@ -925,6 +939,7 @@
   <div class="dialog-actions">
     <button class="primary" id="cClose" data-i18n="done"></button>
   </div>
+  <p class="version" id="version"></p>
   <input type="file" id="cFile" accept="application/json" hidden>
 </dialog>
 
@@ -1841,12 +1856,164 @@
     commit();
   }
 
-  function reorderItem(fromId, toId) {
+  /* ---------------- arrastrar y soltar (eventos de puntero) ----------------
+     No se usa la API nativa de HTML5: <button> no dispara dragstart de forma
+     fiable y <a> arrastra su propia URL. Además esto funciona con el dedo. */
+  var drag = null;
+  var acabaDeArrastrar = false;
+
+  function dragStart(ev, id, el) {
+    // Con ratón se puede arrastrar siempre: el umbral de 6 px distingue clic de arrastre.
+    // Con dedo o lápiz exigimos modo edición, si no la página no podría desplazarse.
+    if (ev.pointerType && ev.pointerType !== "mouse" &&
+        !document.body.classList.contains("editing")) return;
+    if (ev.button !== undefined && ev.button > 0) return;
+    if (ev.target.closest(".tile-del, .app-del")) return;   // la × no arrastra
+    drag = { id: id, el: el, x0: ev.clientX, y0: ev.clientY, activo: false, destino: null, zona: null };
+  }
+
+  function dragMove(ev) {
+    if (!drag) return;
+    if (!drag.activo) {
+      // umbral: por debajo de 6 px se considera un clic, no un arrastre
+      if (Math.abs(ev.clientX - drag.x0) + Math.abs(ev.clientY - drag.y0) < 6) return;
+      drag.activo = true;
+      drag.el.classList.add("dragging");
+      var cara = drag.el.querySelector(".face, .app-icon");
+      var r = cara.getBoundingClientRect();
+      drag.ghost = cara.cloneNode(true);
+      drag.ghost.classList.add("drag-ghost");
+      drag.ghost.style.width = r.width + "px";
+      drag.ghost.style.height = r.height + "px";
+      document.body.appendChild(drag.ghost);
+    }
+    ev.preventDefault();
+    drag.ghost.style.left = ev.clientX + "px";
+    drag.ghost.style.top = ev.clientY + "px";
+    marcarDestino(ev.clientX, ev.clientY);
+  }
+
+  // icono más cercano al puntero dentro de un contenedor, e indica si cae a su derecha
+  function masCercano(cont, x, y) {
+    var nodos = cont.querySelectorAll("[data-drag-id]");
+    var mejor = null, mejorD = Infinity, despues = false;
+    for (var i = 0; i < nodos.length; i++) {
+      if (nodos[i].dataset.dragId === drag.id) continue;   // no se compara consigo mismo
+      var r = nodos[i].getBoundingClientRect();
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var d = (x - cx) * (x - cx) + (y - cy) * (y - cy);
+      if (d < mejorD) { mejorD = d; mejor = nodos[i]; despues = x > cx; }
+    }
+    return mejor ? { el: mejor, despues: despues, dist: Math.sqrt(mejorD) } : null;
+  }
+
+  function marcarDestino(x, y) {
+    var bajo = document.elementFromPoint(x, y);   // el fantasma no estorba: pointer-events none
+    var exacto = bajo ? bajo.closest("[data-drag-id]") : null;
+    if (exacto && exacto.dataset.dragId === drag.id) exacto = null;
+
+    var panelAbierto = !scrim.hidden;
+    var cont = panelAbierto ? appsEl : gridEl;
+    var dentro = cont.getBoundingClientRect();
+    var enCont = x >= dentro.left - 40 && x <= dentro.right + 40 &&
+                 y >= dentro.top - 40 && y <= dentro.bottom + 40;
+
+    var t = null, despues = false;
+    // soltar justo encima de una carpeta la abre como destino; en cualquier otro
+    // caso vale el icono más cercano, que perdona los huecos entre iconos
+    if (exacto && exacto.dataset.dragKind === "folder") {
+      t = exacto;
+    } else if (enCont) {
+      var c = masCercano(cont, x, y);
+      if (c) { t = c.el; despues = c.despues; }
+    }
+
+    if (drag.destino !== t) {
+      if (drag.destino) drag.destino.classList.remove("drop-target");
+      if (t) t.classList.add("drop-target");
+      drag.destino = t;
+    }
+    drag.despues = despues;
+
+    var zona = null;
+    if (bajo === scrim) zona = "scrim";
+    else if (enCont && !panelAbierto) zona = "grid";
+    if (drag.zona !== zona) {
+      gridEl.classList.toggle("drop-here", zona === "grid" && !t);
+      scrim.classList.toggle("drop-here", zona === "scrim");
+      drag.zona = zona;
+    }
+  }
+
+  function dragEnd() {
+    if (!drag) return;
+    var d = drag;
+    drag = null;
+    if (d.ghost) d.ghost.remove();
+    d.el.classList.remove("dragging");
+    if (d.destino) d.destino.classList.remove("drop-target");
+    gridEl.classList.remove("drop-here");
+    scrim.classList.remove("drop-here");
+    if (!d.activo) return;                 // fue un clic normal
+    acabaDeArrastrar = true;               // impide que el clic abra el enlace
+    soltar(d);
+  }
+
+  // moveToFolder inserta ANTES de una referencia; si queremos dejarlo después,
+  // la referencia pasa a ser el siguiente enlace de la carpeta
+  function refSiguiente(id, despues) {
+    if (!despues) return id;
+    var f = state.items.filter(function (i) { return i.kind === "folder" && i.id === openId; })[0];
+    if (!f) return id;
+    var at = f.links.findIndex(function (x) { return x.id === id; });
+    return (at >= 0 && f.links[at + 1]) ? f.links[at + 1].id : null;
+  }
+
+  function soltar(d) {
+    var enEscritorio = state.items.some(function (x) { return x.id === d.id; });
+    var esCarpeta = state.items.some(function (x) { return x.id === d.id && x.kind === "folder"; });
+
+    if (d.destino) {
+      var destId = d.destino.dataset.dragId;
+      var destKind = d.destino.dataset.dragKind;
+
+      if (destKind === "app") {                       // reordenar dentro de la carpeta abierta
+        moveToFolder(d.id, openId, refSiguiente(destId, d.despues));
+      } else if (destKind === "folder" && !esCarpeta && !d.despues) {
+        moveToFolder(d.id, destId, null);             // meter un enlace en la carpeta
+      } else if (enEscritorio) {
+        reorderItem(d.id, destId, d.despues);         // reordenar en el escritorio
+      } else {
+        moveToDesktop(d.id, destId);                  // sacarlo de la carpeta a esa posición
+      }
+      return;
+    }
+
+    if (d.zona === "grid" && !enEscritorio) moveToDesktop(d.id, null);
+    else if (d.zona === "scrim") { moveToDesktop(d.id, null); closeFolder(); }
+  }
+
+  window.addEventListener("pointermove", dragMove, { passive: false });
+  window.addEventListener("pointerup", dragEnd);
+  window.addEventListener("pointercancel", dragEnd);
+
+  // consume el clic que sigue a un arrastre, para que no abra el enlace
+  document.addEventListener("click", function (ev) {
+    if (!acabaDeArrastrar) return;
+    acabaDeArrastrar = false;
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
+
+  function reorderItem(fromId, toId, despues) {
+    if (fromId === toId) return;
     var from = state.items.findIndex(function (i) { return i.id === fromId; });
-    var to = state.items.findIndex(function (i) { return i.id === toId; });
-    if (from < 0 || to < 0 || from === to) return;
+    if (from < 0) return;
     var moved = state.items.splice(from, 1)[0];
-    state.items.splice(to, 0, moved);
+    // el índice del destino se calcula tras quitar el origen, si no se descuadra
+    var to = state.items.findIndex(function (i) { return i.id === toId; });
+    if (to < 0) state.items.push(moved);
+    else state.items.splice(despues ? to + 1 : to, 0, moved);
     commit();
   }
 
@@ -1857,8 +2024,6 @@
 
   /* ---------------- escritorio ---------------- */
   var gridEl = document.getElementById("grid");
-  var dragLink = null;   // id del enlace que se arrastra
-  var dragItem = null;   // id del elemento del escritorio que se arrastra
 
   function render() {
     gridEl.textContent = "";
@@ -1895,28 +2060,10 @@
     var el = document.createElement(item.kind === "folder" ? "button" : "a");
     el.className = "tile";
     el.style.animationDelay = (idx * 40) + "ms";
-    el.draggable = true;
-
-    el.addEventListener("dragstart", function (ev) {
-      // un <a href> arrastra su URL de forma nativa y eso pisa la reordenación;
-      // quitamos el href mientras dura el arrastre y lo restauramos al soltar
-      if (el.tagName === "A" && el.getAttribute("href")) {
-        el.dataset.href = el.getAttribute("href");
-        el.removeAttribute("href");
-      }
-      dragItem = item.id;
-      if (item.kind === "link") dragLink = item.id;
-      el.classList.add("dragging");
-      ev.dataTransfer.effectAllowed = "move";
-      ev.dataTransfer.setData("text/plain", item.id);
-    });
-    el.addEventListener("dragend", function () {
-      if (el.dataset.href) { el.setAttribute("href", el.dataset.href); delete el.dataset.href; }
-      dragItem = null; dragLink = null;
-      el.classList.remove("dragging");
-      el.classList.remove("drop-target");
-    });
-    el.addEventListener("dragleave", function () { el.classList.remove("drop-target"); });
+    el.draggable = false;                 // los <a> se arrastran solos: hay que desactivarlo
+    el.dataset.dragId = item.id;
+    el.dataset.dragKind = item.kind;
+    el.addEventListener("pointerdown", function (ev) { dragStart(ev, item.id, el); });
     return el;
   }
 
@@ -1964,19 +2111,6 @@
     el.appendChild(face); el.appendChild(label); el.appendChild(del);
     el.addEventListener("click", function () { openFolder(item.id, face); });
 
-    el.addEventListener("dragover", function (ev) {
-      if (dragItem === item.id) return;
-      if (!dragLink && !dragItem) return;
-      ev.preventDefault();
-      el.classList.add("drop-target");
-    });
-    el.addEventListener("drop", function (ev) {
-      ev.preventDefault(); ev.stopPropagation();
-      el.classList.remove("drop-target");
-      if (dragLink && dragLink !== item.id) { moveToFolder(dragLink, item.id, null); return; }
-      if (dragItem && dragItem !== item.id) reorderItem(dragItem, item.id);
-    });
-
     return el;
   }
 
@@ -2015,45 +2149,8 @@
       }
     });
 
-    el.addEventListener("dragover", function (ev) {
-      if (!dragItem && !dragLink) return;
-      if (dragItem === item.id) return;
-      ev.preventDefault();
-      el.classList.add("drop-target");
-    });
-    el.addEventListener("drop", function (ev) {
-      ev.preventDefault(); ev.stopPropagation();
-      el.classList.remove("drop-target");
-      if (!dragItem && !dragLink) return;
-      var arrastrado = dragItem || dragLink;
-      // ¿lo que arrastro ya está en el escritorio? -> reordenar
-      if (state.items.some(function (x) { return x.id === arrastrado; })) {
-        reorderItem(arrastrado, item.id);
-      } else if (dragLink) {
-        moveToDesktop(dragLink, item.id);   // venía de dentro de una carpeta
-      }
-    });
-
     return el;
   }
-
-  // soltar sobre el hueco vacío de la rejilla = mandar al escritorio, al final
-  gridEl.addEventListener("dragover", function (ev) {
-    if (!dragLink && !dragItem) return;
-    ev.preventDefault();
-    gridEl.classList.add("drop-here");
-  });
-  gridEl.addEventListener("dragleave", function (ev) {
-    if (ev.target === gridEl) gridEl.classList.remove("drop-here");
-  });
-  gridEl.addEventListener("drop", function (ev) {
-    ev.preventDefault();
-    gridEl.classList.remove("drop-here");
-    if (dragLink) {
-      var f = findLink(dragLink);
-      if (f && f.where === "folder") moveToDesktop(dragLink, null);
-    }
-  });
 
   function newFolder() {
     var v = window.prompt(t("promptFolderName"), "");
@@ -2149,7 +2246,10 @@
       var a = document.createElement("a");
       a.className = "app";
       a.href = normalize(l.url);
-      a.draggable = true;
+      a.draggable = false;
+      a.dataset.dragId = l.id;
+      a.dataset.dragKind = "app";
+      a.addEventListener("pointerdown", function (ev) { dragStart(ev, l.id, a); });
 
       var ic = document.createElement("span");
       ic.className = "app-icon";
@@ -2181,20 +2281,6 @@
           openLinkDialog(l, f.id);
         }
       });
-      a.addEventListener("dragstart", function (ev) {
-        dragLink = l.id;
-        a.classList.add("dragging");
-        ev.dataTransfer.effectAllowed = "move";
-        ev.dataTransfer.setData("text/plain", l.id);
-      });
-      a.addEventListener("dragend", function () { dragLink = null; a.classList.remove("dragging"); });
-      a.addEventListener("dragover", function (ev) { if (dragLink && dragLink !== l.id) ev.preventDefault(); });
-      a.addEventListener("drop", function (ev) {
-        if (!dragLink) return;
-        ev.preventDefault(); ev.stopPropagation();
-        moveToFolder(dragLink, f.id, l.id);
-      });
-
       appsEl.appendChild(a);
     });
 
@@ -2210,23 +2296,6 @@
     add.addEventListener("click", function () { openLinkDialog(null, f.id); });
     appsEl.appendChild(add);
   }
-
-  // arrastrar un icono fuera del panel y soltarlo en el fondo = sacarlo al escritorio
-  scrim.addEventListener("dragover", function (ev) {
-    if (!dragLink || ev.target !== scrim) return;
-    ev.preventDefault();
-    scrim.classList.add("drop-here");
-  });
-  scrim.addEventListener("dragleave", function (ev) {
-    if (ev.target === scrim) scrim.classList.remove("drop-here");
-  });
-  scrim.addEventListener("drop", function (ev) {
-    if (!dragLink || ev.target !== scrim) return;
-    ev.preventDefault();
-    scrim.classList.remove("drop-here");
-    moveToDesktop(dragLink, null);
-    closeFolder();
-  });
 
   titleEl.addEventListener("change", function () {
     var f = currentFolder();
@@ -2657,6 +2726,10 @@
   document.addEventListener("click", function (ev) {
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
+
+  var VERSION = "1.4.0";
+  document.getElementById("version").textContent =
+    "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
   applyI18n();
   paintUiText();
