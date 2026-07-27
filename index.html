@@ -835,117 +835,145 @@
   html[data-style="nordico"] label select { border-radius: 14px; }
 
 
-  /* ---------- BREEZE: KDE Plasma. Plano, marcos de 1 px, acento configurable ----------
-     Colores oficiales del tema: vista #232629, ventana #31363B, texto #EFF0F1,
-     papel #FCFCFC, cartón #EFF0F1, borde #BDC3C7. El azul Plasma (#3DAEE9) sale
-     del tono semilla: elige el tono 236 en Ajustes para el aspecto de fábrica. */
+  /* ---------- BREEZE: KDE Plasma 6. Redondeado, translúcido y con desenfoque ----------
+     Plasma 6 suavizó mucho el tema: los popups son translúcidos con blur, las esquinas
+     pasaron a ser claramente redondeadas y la selección es un relleno azul suave, no un
+     marco. Colores oficiales: vista #FCFCFC / #232629, ventana #EFF0F1 / #31363B.
+     El azul Plasma (#3DAEE9) sale del tono semilla: elige el 236 para el aspecto de fábrica. */
   html[data-style="breeze"] {
     --font: "Noto Sans", "Inter", "Cantarell", "DejaVu Sans", system-ui, sans-serif;
     --font-display: var(--font);
-    --tile: 68px;
-    --r-face: 4px; --r-mini: 2px; --r-app: 4px; --r-panel: 4px;
-    --field-h: 42px; --r-field: 3px; --r-chip: 3px;
-    --blur-1: 0px; --blur-2: 0px; --blur-3: 0px; --sat: 100%;
-    --mesh-op: 0;
-    --grid-gap: 26px 14px;
+    --tile: 66px;
+    --r-face: 12px; --r-mini: 5px; --r-app: 12px; --r-panel: 14px;
+    --field-h: 44px; --r-field: 10px; --r-chip: 8px;
+    --blur-1: 18px; --blur-2: 26px; --blur-3: 32px; --sat: 130%;
+    --mesh-op: 0.30;
+    --grid-gap: 20px 10px;
     --label-fs: 12px; --label-tt: none; --label-ls: 0;
     --glass: 0 0 0 0 transparent;
 
-    --bg:        #232629;
-    --bg-2:      #31363B;
-    --surface:   #31363B;
-    --surface-2: #3B4045;
-    --outline:   #4D5359;
-    --text:      #EFF0F1;
-    --muted:     #9AA1A8;
-    --primary:   oklch(0.70 0.115 var(--hue));
+    --bg:        #1E2226;
+    --bg-2:      #2A2E33;
+    --surface:   rgba(49, 54, 59, 0.72);
+    --surface-2: rgba(62, 68, 74, 0.82);
+    --outline:   rgba(255, 255, 255, 0.11);
+    --text:      #FCFCFC;
+    --muted:     #A6ADB4;
+    --primary:   oklch(0.72 0.118 var(--hue));
     --on-primary: #FCFCFC;
-    --shadow:    0 1px 4px rgba(0, 0, 0, 0.38);
-    --scrim:     rgba(20, 22, 24, 0.66);
+    --shadow:    0 10px 30px -8px rgba(0, 0, 0, 0.55);
+    --scrim:     rgba(18, 20, 23, 0.6);
+    --realce:    color-mix(in oklab, var(--primary) 26%, transparent);
+    --suave:     color-mix(in oklab, var(--primary) 13%, transparent);
   }
   html[data-style="breeze"][data-mode="light"] {
-    --bg:        #EFF0F1;
+    --bg:        #E7E9EA;
     --bg-2:      #FCFCFC;
-    --surface:   #FCFCFC;
-    --surface-2: #E4E6E7;
-    --outline:   #BDC3C7;
+    --surface:   rgba(252, 252, 252, 0.80);
+    --surface-2: rgba(255, 255, 255, 0.92);
+    --outline:   rgba(0, 0, 0, 0.10);
     --text:      #232629;
     --muted:     #6E7377;
-    --primary:   oklch(0.58 0.135 var(--hue));
+    --primary:   oklch(0.60 0.135 var(--hue));
     --on-primary: #FCFCFC;
-    --shadow:    0 1px 3px rgba(0, 0, 0, 0.13);
-    --scrim:     rgba(239, 240, 241, 0.72);
+    --shadow:    0 10px 26px -10px rgba(0, 0, 0, 0.22);
+    --scrim:     rgba(231, 233, 234, 0.66);
+    --realce:    color-mix(in oklab, var(--primary) 22%, transparent);
+    --suave:     color-mix(in oklab, var(--primary) 11%, transparent);
   }
 
-  html[data-style="breeze"] .mesh { display: none; }
-  html[data-style="breeze"] .now .h { font-weight: 400; font-size: 38px; letter-spacing: -0.012em; }
-  html[data-style="breeze"] .now .d { font-size: 12px; letter-spacing: 0; }
-  html[data-style="breeze"] .topbar { border-bottom: 1px solid var(--outline); padding-bottom: 14px; }
+  /* un fondo de color muy tenue, como el escritorio detrás de un popup translúcido */
+  html[data-style="breeze"] .blob { filter: saturate(60%) brightness(1.1); }
+  html[data-style="breeze"] .now .h { font-weight: 500; font-size: 38px; letter-spacing: -0.018em; }
+  html[data-style="breeze"] .now .d { font-size: 12.5px; letter-spacing: 0; }
 
-  /* el buscador imita un QLineEdit: marco fino que se tiñe de azul al enfocar */
+  /* buscador de Kickoff: redondeado, translúcido, sin marco duro */
   html[data-style="breeze"] .field {
-    background: var(--bg-2);
+    background: var(--surface-2);
     border: 1px solid var(--outline);
     box-shadow: none;
-    padding-left: 14px;
+    padding-left: 18px;
   }
-  html[data-style="breeze"] .field:focus-within { border-color: var(--primary); transform: none; }
+  html[data-style="breeze"] .field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--suave);
+    transform: none;
+  }
   html[data-style="breeze"] #q { font-size: 15px; }
 
-  /* botones planos con marco, como los QPushButton de Breeze */
+  /* botones planos y redondeados; al pasar por encima se rellenan, no se enmarcan */
   html[data-style="breeze"] .icon-btn,
   html[data-style="breeze"] .engine-chip,
   html[data-style="breeze"] .mini-btn,
   html[data-style="breeze"] .dialog-actions button {
-    background: var(--surface);
+    background: var(--surface-2);
     border: 1px solid var(--outline);
-    border-radius: 3px;
     box-shadow: none;
   }
-  html[data-style="breeze"] .icon-btn { width: 38px; height: 38px; }
-  html[data-style="breeze"] .icon-btn svg { width: 17px; height: 17px; }
+  html[data-style="breeze"] .icon-btn { width: 40px; height: 40px; border-radius: 10px; }
+  html[data-style="breeze"] .icon-btn svg { width: 18px; height: 18px; }
   html[data-style="breeze"] .icon-btn:hover,
   html[data-style="breeze"] .engine-chip:hover,
   html[data-style="breeze"] .mini-btn:hover,
   html[data-style="breeze"] .dialog-actions button:hover {
-    border-color: var(--primary); color: var(--text); transform: none; background: var(--surface);
+    background: var(--suave); border-color: var(--primary); color: var(--text); transform: none;
   }
   html[data-style="breeze"] .icon-btn.on,
   html[data-style="breeze"] .dialog-actions .primary {
-    background: var(--primary); border-color: var(--primary); color: var(--on-primary);
+    background: var(--primary); border-color: transparent; color: var(--on-primary);
   }
 
-  /* iconos planos: ni brillo ni relieve */
-  html[data-style="breeze"] .face { box-shadow: none; border: 1px solid var(--outline); }
-  html[data-style="breeze"] .face.folder { background: var(--surface); gap: 4px; padding: 8px; }
-  html[data-style="breeze"] .app-icon { box-shadow: none; border: 1px solid var(--outline); }
-  html[data-style="breeze"] .tile:hover .face { transform: none; border-color: var(--primary); }
+  /* iconos a todo color y sin marco, con el realce detrás como en el lanzador */
+  html[data-style="breeze"] .tile {
+    padding: 9px 5px 7px;
+    border-radius: 12px;
+    transition: background .13s var(--ease), transform .18s var(--ease);
+  }
+  html[data-style="breeze"] .tile:hover { background: var(--suave); }
+  html[data-style="breeze"] .tile:active { background: var(--realce); }
+  html[data-style="breeze"] .face { box-shadow: none; border: 0; }
+  html[data-style="breeze"] .face.folder {
+    background: var(--surface-2);
+    border: 1px solid var(--outline);
+    gap: 5px; padding: 8px;
+  }
+  html[data-style="breeze"] .tile:hover .face { transform: none; border-color: var(--outline); }
   html[data-style="breeze"] .tile:active .face { transform: none; }
-  html[data-style="breeze"] .app:hover { transform: none; }
+  html[data-style="breeze"] .tile.drop-into .face { transform: scale(1.06); border-color: var(--primary); }
+  html[data-style="breeze"] .app-icon { box-shadow: none; }
+  html[data-style="breeze"] .app { padding: 8px 4px; border-radius: 12px; }
+  html[data-style="breeze"] .app:hover { background: var(--suave); transform: none; }
   html[data-style="breeze"] .tile-host { display: none; }
-  html[data-style="breeze"] .more-badge { border-radius: 2px; }
+  html[data-style="breeze"] .more-badge { border-radius: 999px; }
 
-  /* selección de relleno sólido, la marca de la casa */
-  html[data-style="breeze"] .hits { border-radius: 3px; box-shadow: var(--shadow); }
-  html[data-style="breeze"] .panel { border-radius: 4px; }
-  html[data-style="breeze"] .panel-head { border-bottom: 1px solid var(--outline); padding-bottom: 12px; }
-  html[data-style="breeze"] dialog { border-radius: 4px; }
-  html[data-style="breeze"] .segmented {
-    background: transparent; border: 1px solid var(--outline); border-radius: 3px; padding: 3px;
+  /* selección: relleno azul suave con el texto normal, no azul sólido con texto blanco */
+  html[data-style="breeze"] .hits {
+    border-radius: 12px; box-shadow: var(--shadow); padding: 4px;
   }
-  html[data-style="breeze"] .segmented button { border-radius: 2px; }
+  html[data-style="breeze"] .hit { border-radius: 8px; }
+  html[data-style="breeze"] .hit[aria-selected="true"] { background: var(--realce); color: var(--text); }
+  html[data-style="breeze"] .hit[aria-selected="true"] .path { color: var(--muted); opacity: 1; }
+
+  html[data-style="breeze"] .panel { border-radius: 14px; }
+  html[data-style="breeze"] .panel-head { border-bottom: 1px solid var(--outline); padding-bottom: 14px; }
+  html[data-style="breeze"] dialog { border-radius: 14px; background: var(--bg-2); }
+  html[data-style="breeze"] .segmented {
+    background: var(--surface); border: 1px solid var(--outline); border-radius: 10px; padding: 4px;
+  }
+  html[data-style="breeze"] .segmented button { border-radius: 7px; }
+  html[data-style="breeze"] .segmented button:hover[aria-pressed="false"] { background: var(--suave); }
   html[data-style="breeze"] label input[type="text"],
   html[data-style="breeze"] label select {
-    background: var(--bg-2); border-color: var(--outline); border-radius: 3px;
+    background: var(--surface-2); border-color: var(--outline); border-radius: 9px;
   }
-  html[data-style="breeze"] .backup { border-radius: 3px; border: 1px solid var(--outline); }
+  html[data-style="breeze"] .backup { border-radius: 9px; }
 
-  /* barras de desplazamiento al estilo Plasma */
+  /* barras de desplazamiento finas, al estilo Plasma */
   html[data-style="breeze"] ::-webkit-scrollbar { width: 12px; height: 12px; }
   html[data-style="breeze"] ::-webkit-scrollbar-track { background: transparent; }
   html[data-style="breeze"] ::-webkit-scrollbar-thumb {
-    background: var(--outline); border-radius: 6px;
-    border: 3px solid transparent; background-clip: content-box;
+    background: var(--muted); border-radius: 999px;
+    border: 4px solid transparent; background-clip: content-box; opacity: .5;
   }
   html[data-style="breeze"] ::-webkit-scrollbar-thumb:hover {
     background: var(--primary); background-clip: content-box;
@@ -2943,7 +2971,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.7.0";
+  var VERSION = "1.8.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
