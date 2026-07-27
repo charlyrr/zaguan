@@ -5,7 +5,7 @@
 **Tu página de inicio, en un solo fichero.**
 
 Una página de nueva pestaña para navegadores basados en Chromium: buscador, carpetas de
-favoritos al estilo del lanzador de Android y cinco estilos visuales. Un único HTML, sin
+favoritos al estilo del lanzador de Android y seis estilos visuales. Un único HTML, sin
 dependencias, sin compilación y sin una sola petición a servidores de terceros.
 
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-8A9A5B.svg?style=flat-square)](LICENSE)
@@ -31,13 +31,13 @@ dependencias, sin compilación y sin una sola petición a servidores de terceros
 
 ## Estilos
 
-Cinco acabados, cada uno con su variante clara y oscura.
+Seis acabados, cada uno con su variante clara y oscura.
 
 |  |  |
 |:---:|:---:|
 | <img src="capturas/vivo.png" width="400"><br>**Vivo** — Material You | <img src="capturas/clasico.png" width="400"><br>**Clásico** — Mac OS X de la vieja escuela |
 | <img src="capturas/cristal.png" width="400"><br>**Cristal** — vidrio profundo | <img src="capturas/minimo.png" width="400"><br>**Mínimo** — monocromo, a un filete |
-| <img src="capturas/nordico.png" width="400"><br>**Nórdico** — lino y madera | |
+| <img src="capturas/nordico.png" width="400"><br>**Nórdico** — lino y madera | <img src="capturas/breeze.png" width="400"><br>**Breeze** — KDE Plasma |
 
 <table>
 <tr><th align="left">Estilo</th><th align="left">Idea</th><th align="left">Rasgos</th></tr>
@@ -46,10 +46,12 @@ Cinco acabados, cada uno con su variante clara y oscura.
 <tr><td><b>Cristal</b></td><td>Vidrio profundo</td><td>Superficies al 10 %, desenfoque de 58 px, destello diagonal y cantos con dispersión cromática</td></tr>
 <tr><td><b>Mínimo</b></td><td>Monocromo</td><td>Iconos de contorno, cero sombras, buscador reducido a una línea</td></tr>
 <tr><td><b>Nórdico</b></td><td>Lino y madera</td><td>Base cálida, veta sutil, iconos en pastel apagado</td></tr>
+<tr><td><b>Breeze</b></td><td>KDE Plasma</td><td>Superficies planas, marcos de 1 px, paleta oficial de Breeze, selección en azul Plasma</td></tr>
 </table>
 
 El color de acento se genera a partir de un único tono semilla que eliges tú, así que todos
-los estilos mantienen la legibilidad sea cual sea el color.
+los estilos mantienen la legibilidad sea cual sea el color. Breeze luce de fábrica con el
+tono **236**, que corresponde al azul Plasma.
 
 ---
 
@@ -180,7 +182,7 @@ navegador, o usar cualquier extensión de tipo *custom new tab*.
 | Parámetro | Valores | Efecto |
 |---|---|---|
 | `demo` | `1` | Carga favoritos de ejemplo y **no escribe nada** en el navegador |
-| `style` | `material`, `clasico`, `cristal`, `minimo`, `nordico` | Fuerza el estilo |
+| `style` | `material`, `clasico`, `cristal`, `minimo`, `nordico`, `breeze` | Fuerza el estilo |
 | `mode` | `auto`, `light`, `dark` | Fuerza claro u oscuro |
 | `lang` | `en`, `es`, `fr`, `de`, `it`, `pt`, `ru`, `zh` | Fuerza el idioma |
 | `hue` | `0`–`359` | Fuerza el tono semilla |

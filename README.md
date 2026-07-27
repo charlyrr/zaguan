@@ -5,7 +5,7 @@
 **Your start page, in a single file.**
 
 A new tab page for Chromium-based browsers: search, Android-launcher-style bookmark folders
-and five visual styles. One HTML file — no dependencies, no build step, and not a single
+and six visual styles. One HTML file — no dependencies, no build step, and not a single
 request to a third-party server.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-8A9A5B.svg?style=flat-square)](LICENSE)
@@ -31,13 +31,13 @@ request to a third-party server.
 
 ## Styles
 
-Five looks, each with its own light and dark variant.
+Six looks, each with its own light and dark variant.
 
 |  |  |
 |:---:|:---:|
 | <img src="capturas/vivo.png" width="400"><br>**Vivid** — Material You | <img src="capturas/clasico.png" width="400"><br>**Classic** — old-school Mac OS X |
 | <img src="capturas/cristal.png" width="400"><br>**Glass** — deep frosted glass | <img src="capturas/minimo.png" width="400"><br>**Minimal** — monochrome, hairline |
-| <img src="capturas/nordico.png" width="400"><br>**Nordic** — linen and wood | |
+| <img src="capturas/nordico.png" width="400"><br>**Nordic** — linen and wood | <img src="capturas/breeze.png" width="400"><br>**Breeze** — KDE Plasma |
 
 <table>
 <tr><th align="left">Style</th><th align="left">Idea</th><th align="left">Traits</th></tr>
@@ -46,10 +46,12 @@ Five looks, each with its own light and dark variant.
 <tr><td><b>Glass</b></td><td>Deep frosted glass</td><td>10 % opaque surfaces, 58 px blur, diagonal sheen, chromatic edges</td></tr>
 <tr><td><b>Minimal</b></td><td>Monochrome</td><td>Outline icons, no shadows, search reduced to a single rule</td></tr>
 <tr><td><b>Nordic</b></td><td>Linen and wood</td><td>Warm base, subtle grain, muted pastel icons</td></tr>
+<tr><td><b>Breeze</b></td><td>KDE Plasma</td><td>Flat surfaces, 1 px frames, official Breeze palette, Plasma-blue selection</td></tr>
 </table>
 
 The accent colour is generated from a single seed hue you pick, so every style stays
-readable whichever colour you choose.
+readable whichever colour you choose. Breeze looks factory-fresh at hue **236**, which
+lands on Plasma Blue.
 
 ---
 
@@ -179,7 +181,7 @@ Useful for linking a specific configuration or automating screenshots:
 | Parameter | Values | Effect |
 |---|---|---|
 | `demo` | `1` | Loads sample bookmarks and **writes nothing** to the browser |
-| `style` | `material`, `clasico`, `cristal`, `minimo`, `nordico` | Forces a style |
+| `style` | `material`, `clasico`, `cristal`, `minimo`, `nordico`, `breeze` | Forces a style |
 | `mode` | `auto`, `light`, `dark` | Forces light or dark |
 | `lang` | `en`, `es`, `fr`, `de`, `it`, `pt`, `ru`, `zh` | Forces a language |
 | `hue` | `0`–`359` | Forces the seed hue |

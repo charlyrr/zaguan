@@ -834,6 +834,123 @@
   html[data-style="nordico"] label input[type="text"],
   html[data-style="nordico"] label select { border-radius: 14px; }
 
+
+  /* ---------- BREEZE: KDE Plasma. Plano, marcos de 1 px, acento configurable ----------
+     Colores oficiales del tema: vista #232629, ventana #31363B, texto #EFF0F1,
+     papel #FCFCFC, cartón #EFF0F1, borde #BDC3C7. El azul Plasma (#3DAEE9) sale
+     del tono semilla: elige el tono 236 en Ajustes para el aspecto de fábrica. */
+  html[data-style="breeze"] {
+    --font: "Noto Sans", "Inter", "Cantarell", "DejaVu Sans", system-ui, sans-serif;
+    --font-display: var(--font);
+    --tile: 68px;
+    --r-face: 4px; --r-mini: 2px; --r-app: 4px; --r-panel: 4px;
+    --field-h: 42px; --r-field: 3px; --r-chip: 3px;
+    --blur-1: 0px; --blur-2: 0px; --blur-3: 0px; --sat: 100%;
+    --mesh-op: 0;
+    --grid-gap: 26px 14px;
+    --label-fs: 12px; --label-tt: none; --label-ls: 0;
+    --glass: 0 0 0 0 transparent;
+
+    --bg:        #232629;
+    --bg-2:      #31363B;
+    --surface:   #31363B;
+    --surface-2: #3B4045;
+    --outline:   #4D5359;
+    --text:      #EFF0F1;
+    --muted:     #9AA1A8;
+    --primary:   oklch(0.70 0.115 var(--hue));
+    --on-primary: #FCFCFC;
+    --shadow:    0 1px 4px rgba(0, 0, 0, 0.38);
+    --scrim:     rgba(20, 22, 24, 0.66);
+  }
+  html[data-style="breeze"][data-mode="light"] {
+    --bg:        #EFF0F1;
+    --bg-2:      #FCFCFC;
+    --surface:   #FCFCFC;
+    --surface-2: #E4E6E7;
+    --outline:   #BDC3C7;
+    --text:      #232629;
+    --muted:     #6E7377;
+    --primary:   oklch(0.58 0.135 var(--hue));
+    --on-primary: #FCFCFC;
+    --shadow:    0 1px 3px rgba(0, 0, 0, 0.13);
+    --scrim:     rgba(239, 240, 241, 0.72);
+  }
+
+  html[data-style="breeze"] .mesh { display: none; }
+  html[data-style="breeze"] .now .h { font-weight: 400; font-size: 38px; letter-spacing: -0.012em; }
+  html[data-style="breeze"] .now .d { font-size: 12px; letter-spacing: 0; }
+  html[data-style="breeze"] .topbar { border-bottom: 1px solid var(--outline); padding-bottom: 14px; }
+
+  /* el buscador imita un QLineEdit: marco fino que se tiñe de azul al enfocar */
+  html[data-style="breeze"] .field {
+    background: var(--bg-2);
+    border: 1px solid var(--outline);
+    box-shadow: none;
+    padding-left: 14px;
+  }
+  html[data-style="breeze"] .field:focus-within { border-color: var(--primary); transform: none; }
+  html[data-style="breeze"] #q { font-size: 15px; }
+
+  /* botones planos con marco, como los QPushButton de Breeze */
+  html[data-style="breeze"] .icon-btn,
+  html[data-style="breeze"] .engine-chip,
+  html[data-style="breeze"] .mini-btn,
+  html[data-style="breeze"] .dialog-actions button {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: 3px;
+    box-shadow: none;
+  }
+  html[data-style="breeze"] .icon-btn { width: 38px; height: 38px; }
+  html[data-style="breeze"] .icon-btn svg { width: 17px; height: 17px; }
+  html[data-style="breeze"] .icon-btn:hover,
+  html[data-style="breeze"] .engine-chip:hover,
+  html[data-style="breeze"] .mini-btn:hover,
+  html[data-style="breeze"] .dialog-actions button:hover {
+    border-color: var(--primary); color: var(--text); transform: none; background: var(--surface);
+  }
+  html[data-style="breeze"] .icon-btn.on,
+  html[data-style="breeze"] .dialog-actions .primary {
+    background: var(--primary); border-color: var(--primary); color: var(--on-primary);
+  }
+
+  /* iconos planos: ni brillo ni relieve */
+  html[data-style="breeze"] .face { box-shadow: none; border: 1px solid var(--outline); }
+  html[data-style="breeze"] .face.folder { background: var(--surface); gap: 4px; padding: 8px; }
+  html[data-style="breeze"] .app-icon { box-shadow: none; border: 1px solid var(--outline); }
+  html[data-style="breeze"] .tile:hover .face { transform: none; border-color: var(--primary); }
+  html[data-style="breeze"] .tile:active .face { transform: none; }
+  html[data-style="breeze"] .app:hover { transform: none; }
+  html[data-style="breeze"] .tile-host { display: none; }
+  html[data-style="breeze"] .more-badge { border-radius: 2px; }
+
+  /* selección de relleno sólido, la marca de la casa */
+  html[data-style="breeze"] .hits { border-radius: 3px; box-shadow: var(--shadow); }
+  html[data-style="breeze"] .panel { border-radius: 4px; }
+  html[data-style="breeze"] .panel-head { border-bottom: 1px solid var(--outline); padding-bottom: 12px; }
+  html[data-style="breeze"] dialog { border-radius: 4px; }
+  html[data-style="breeze"] .segmented {
+    background: transparent; border: 1px solid var(--outline); border-radius: 3px; padding: 3px;
+  }
+  html[data-style="breeze"] .segmented button { border-radius: 2px; }
+  html[data-style="breeze"] label input[type="text"],
+  html[data-style="breeze"] label select {
+    background: var(--bg-2); border-color: var(--outline); border-radius: 3px;
+  }
+  html[data-style="breeze"] .backup { border-radius: 3px; border: 1px solid var(--outline); }
+
+  /* barras de desplazamiento al estilo Plasma */
+  html[data-style="breeze"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+  html[data-style="breeze"] ::-webkit-scrollbar-track { background: transparent; }
+  html[data-style="breeze"] ::-webkit-scrollbar-thumb {
+    background: var(--outline); border-radius: 6px;
+    border: 3px solid transparent; background-clip: content-box;
+  }
+  html[data-style="breeze"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary); background-clip: content-box;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
   }
@@ -938,6 +1055,7 @@
     <button data-style="cristal" data-i18n="styleGlass"></button>
     <button data-style="minimo" data-i18n="styleMinimal"></button>
     <button data-style="nordico" data-i18n="styleNordic"></button>
+    <button data-style="breeze" data-i18n="styleBreeze"></button>
   </div>
   <label><span data-i18n="engine"></span><select id="cEngine"></select></label>
   <label><span data-i18n="customTemplate"></span>
@@ -1009,6 +1127,7 @@
       "styleGlass": "Glass",
       "styleMinimal": "Minimal",
       "styleNordic": "Nordic",
+      "styleBreeze": "Breeze",
       "engine": "Search engine",
       "customTemplate": "Custom template (use %s)",
       "useFavicons": "Use each site's favicon",
@@ -1085,6 +1204,7 @@
       "styleGlass": "Cristal",
       "styleMinimal": "Mínimo",
       "styleNordic": "Nórdico",
+      "styleBreeze": "Breeze",
       "engine": "Buscador",
       "customTemplate": "Plantilla propia (usa %s)",
       "useFavicons": "Usar el favicon de cada sitio",
@@ -1161,6 +1281,7 @@
       "styleGlass": "Verre",
       "styleMinimal": "Minimal",
       "styleNordic": "Nordique",
+      "styleBreeze": "Breeze",
       "engine": "Moteur de recherche",
       "customTemplate": "Modèle personnalisé (utilisez %s)",
       "useFavicons": "Utiliser le favicon de chaque site",
@@ -1237,6 +1358,7 @@
       "styleGlass": "Glas",
       "styleMinimal": "Minimal",
       "styleNordic": "Nordisch",
+      "styleBreeze": "Breeze",
       "engine": "Suchmaschine",
       "customTemplate": "Eigene Vorlage (nutze %s)",
       "useFavicons": "Favicon der jeweiligen Seite verwenden",
@@ -1313,6 +1435,7 @@
       "styleGlass": "Vetro",
       "styleMinimal": "Minimale",
       "styleNordic": "Nordico",
+      "styleBreeze": "Breeze",
       "engine": "Motore di ricerca",
       "customTemplate": "Modello personalizzato (usa %s)",
       "useFavicons": "Usa la favicon di ogni sito",
@@ -1389,6 +1512,7 @@
       "styleGlass": "Vidro",
       "styleMinimal": "Mínimo",
       "styleNordic": "Nórdico",
+      "styleBreeze": "Breeze",
       "engine": "Motor de busca",
       "customTemplate": "Modelo próprio (use %s)",
       "useFavicons": "Usar o favicon de cada site",
@@ -1465,6 +1589,7 @@
       "styleGlass": "Стекло",
       "styleMinimal": "Минимальный",
       "styleNordic": "Северный",
+      "styleBreeze": "Breeze",
       "engine": "Поисковик",
       "customTemplate": "Свой шаблон (используйте %s)",
       "useFavicons": "Использовать фавикон каждого сайта",
@@ -1541,6 +1666,7 @@
       "styleGlass": "玻璃",
       "styleMinimal": "极简",
       "styleNordic": "北欧",
+      "styleBreeze": "Breeze",
       "engine": "搜索引擎",
       "customTemplate": "自定义模板（使用 %s）",
       "useFavicons": "使用各网站的图标",
@@ -1679,7 +1805,7 @@
     if (["auto", "light", "dark"].indexOf(s.mode) < 0) s.mode = "auto";
     if (s.lang !== "auto" && !I18N[s.lang]) s.lang = "auto";
     if (s.style === "elegante") s.style = "clasico";
-    if (["material", "clasico", "cristal", "minimo", "nordico"].indexOf(s.style) < 0) s.style = "material";
+    if (["material", "clasico", "cristal", "minimo", "nordico", "breeze"].indexOf(s.style) < 0) s.style = "material";
     if (!s.engine || !ENGINES[s.engine]) s.engine = "ddg";
     return s;
   }
@@ -2681,7 +2807,7 @@
     pickerWrap.title = t("ownColor");
   }
 
-  var PALETTE = [172, 210, 258, 300, 22, 62, 128];
+  var PALETTE = [236, 172, 210, 258, 300, 22, 62, 128];   // 236 = azul Plasma de Breeze
   var seedsEl = document.getElementById("seeds");
   PALETTE.forEach(function (h) {
     var b = document.createElement("button");
@@ -2817,7 +2943,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.6.0";
+  var VERSION = "1.7.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
