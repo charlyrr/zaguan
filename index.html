@@ -772,130 +772,153 @@
   html[data-style="minimo"] label input[type="text"],
   html[data-style="minimo"] label select { border-radius: 3px; background: transparent; }
 
-  /* ---------- FLUENT: Windows 11. Capas opacas, bordes asimétricos y acento ----------
-     Claves de Fluent Design: fondo Mica muy desaturado, tarjetas sólidas apiladas,
-     radios de 8 px en superficies y 4 px en controles, y el borde inferior más oscuro
-     que el resto (en oscuro, el superior más claro), que es lo que da el relieve sutil
-     de los controles de WinUI. El azul de Windows (#0078D4) sale del tono 258. */
+  /* ---------- FLUENT: el menú Inicio de Windows 11 ----------
+     Lo que hace reconocible a Win11 no son los detalles finos, sino tres cosas muy visibles:
+     el panel flotante acrílico con esquinas redondeadas y sombra marcada, el buscador en
+     forma de píldora arriba, y la rejilla de iconos con degradado suave. El azul de
+     Windows (#0078D4) sale del tono 258. */
   html[data-style="fluent"] {
     --font: "Segoe UI Variable Text", "Segoe UI", "Selawik", "Inter",
             "Noto Sans", system-ui, sans-serif;
     --font-display: "Segoe UI Variable Display", var(--font);
-    --tile: 64px;
-    --r-face: 8px; --r-mini: 3px; --r-app: 8px; --r-panel: 8px;
-    --field-h: 40px; --r-field: 8px; --r-chip: 4px;
-    --blur-1: 30px; --blur-2: 40px; --blur-3: 60px; --sat: 118%;
-    --mesh-op: 0.16;
-    --grid-gap: 18px 8px;
+    --tile: 62px;
+    --r-face: 10px; --r-mini: 3px; --r-app: 10px; --r-panel: 12px;
+    --field-h: 42px; --r-field: 999px; --r-chip: 999px;
+    --blur-1: 40px; --blur-2: 50px; --blur-3: 60px; --sat: 160%;
+    --mesh-op: 0.55;
+    --grid-gap: 16px 6px;
     --label-fs: 12px; --label-tt: none; --label-ls: 0;
     --glass: 0 0 0 0 transparent;
 
-    --bg:        #202020;
-    --bg-2:      #2B2B2B;
-    --surface:   #2D2D2D;
-    --surface-2: #333333;
-    --outline:   rgba(255, 255, 255, 0.075);
-    --borde-alto: rgba(255, 255, 255, 0.093);
+    --bg:        #1C1C1C;
+    --bg-2:      #2C2C2C;
+    --surface:   rgba(44, 44, 44, 0.78);
+    --surface-2: rgba(58, 58, 58, 0.86);
+    --outline:   rgba(255, 255, 255, 0.09);
     --text:      #FFFFFF;
-    --muted:     rgba(255, 255, 255, 0.606);
+    --muted:     rgba(255, 255, 255, 0.62);
     --primary:   oklch(0.78 0.125 var(--hue));
     --on-primary: #1B1B1B;
-    --shadow:    0 8px 16px rgba(0, 0, 0, 0.28);
-    --scrim:     rgba(18, 18, 18, 0.55);
-    --capa:      rgba(255, 255, 255, 0.061);
-    --capa-2:    rgba(255, 255, 255, 0.084);
+    --shadow:    0 16px 40px rgba(0, 0, 0, 0.5);
+    --scrim:     rgba(16, 16, 16, 0.5);
+    --capa:      rgba(255, 255, 255, 0.07);
+    --capa-2:    rgba(255, 255, 255, 0.11);
   }
   html[data-style="fluent"][data-mode="light"] {
+    /* Mica en claro es casi neutro: gris muy claro con un tinte apenas perceptible.
+       Heredar el 0.55 del modo oscuro lavaba la página de pasteles. */
+    --mesh-op: 0.17;
+    --sat: 122%;
     --bg:        #F3F3F3;
-    --bg-2:      #FBFBFB;
-    --surface:   #FBFBFB;
-    --surface-2: #FFFFFF;
-    --outline:   rgba(0, 0, 0, 0.058);
-    --borde-alto: rgba(0, 0, 0, 0.092);
+    --bg-2:      #FFFFFF;
+    --surface:   rgba(251, 251, 251, 0.90);
+    --surface-2: rgba(255, 255, 255, 0.95);
+    --outline:   rgba(0, 0, 0, 0.07);
     --text:      #1B1B1B;
     --muted:     #5D5D5D;
     --primary:   oklch(0.55 0.155 var(--hue));
     --on-primary: #FFFFFF;
-    --shadow:    0 8px 16px rgba(0, 0, 0, 0.10);
-    --scrim:     rgba(243, 243, 243, 0.6);
-    --capa:      rgba(0, 0, 0, 0.037);
-    --capa-2:    rgba(0, 0, 0, 0.060);
+    --shadow:    0 16px 36px rgba(0, 0, 0, 0.16);
+    --scrim:     rgba(233, 235, 238, 0.55);
+    --capa:      rgba(0, 0, 0, 0.045);
+    --capa-2:    rgba(0, 0, 0, 0.075);
   }
 
-  /* Mica: el color del fondo apenas se intuye, muy desaturado */
-  html[data-style="fluent"] .blob { filter: saturate(22%) brightness(1.05); }
-  html[data-style="fluent"] .now .h { font-weight: 600; font-size: 36px; letter-spacing: -0.02em; }
+  /* el contenido entero flota como el menú Inicio: acrílico, redondeado y con sombra */
+  html[data-style="fluent"] .wrap {
+    max-width: 720px;
+    margin: 40px auto;
+    padding: 22px 26px 26px;
+    background: var(--surface);
+    -webkit-backdrop-filter: blur(var(--blur-3)) saturate(var(--sat));
+    backdrop-filter: blur(var(--blur-3)) saturate(var(--sat));
+    border: 1px solid var(--outline);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+  @media (max-width: 620px) {
+    html[data-style="fluent"] .wrap {
+      margin: 0; border-radius: 0; border: 0; box-shadow: none; background: transparent;
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+    }
+  }
+  /* el fondo se ve de verdad detrás del acrílico */
+  html[data-style="fluent"] .blob { filter: saturate(85%); }
+  html[data-style="fluent"][data-mode="light"] .blob { filter: saturate(30%) brightness(1.12); }
+  html[data-style="fluent"] .now .h { font-weight: 600; font-size: 32px; letter-spacing: -0.022em; }
   html[data-style="fluent"] .now .d { font-size: 12px; letter-spacing: 0; }
 
-  /* TextBox de WinUI: capa sólida y filete inferior de acento al enfocar */
+  /* buscador en píldora, como el del menú Inicio */
   html[data-style="fluent"] .field {
-    background: var(--surface);
+    background: var(--bg-2);
     border: 1px solid var(--outline);
-    border-bottom: 1px solid var(--borde-alto);
     box-shadow: none;
-    padding-left: 14px;
+    padding-left: 18px;
   }
   html[data-style="fluent"] .field:focus-within {
-    border-color: var(--outline);
-    border-bottom: 2px solid var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
     transform: none;
   }
   html[data-style="fluent"] #q { font-size: 14.5px; }
 
-  /* botones: borde asimétrico, la firma visual de Fluent */
   html[data-style="fluent"] .icon-btn,
   html[data-style="fluent"] .engine-chip,
   html[data-style="fluent"] .mini-btn,
   html[data-style="fluent"] .dialog-actions button {
-    background: var(--surface);
+    background: var(--capa);
     border: 1px solid var(--outline);
-    border-bottom-color: var(--borde-alto);
     box-shadow: none;
   }
-  html[data-style="fluent"] .icon-btn { width: 36px; height: 36px; border-radius: 5px; }
-  html[data-style="fluent"] .icon-btn svg { width: 17px; height: 17px; }
+  html[data-style="fluent"] .icon-btn { width: 34px; height: 34px; border-radius: 6px; }
+  html[data-style="fluent"] .icon-btn svg { width: 16px; height: 16px; }
   html[data-style="fluent"] .icon-btn:hover,
   html[data-style="fluent"] .engine-chip:hover,
   html[data-style="fluent"] .mini-btn:hover,
   html[data-style="fluent"] .dialog-actions button:hover {
-    background: var(--surface-2); color: var(--text); transform: none;
+    background: var(--capa-2); color: var(--text); transform: none;
   }
-  html[data-style="fluent"] .icon-btn:active { transform: none; opacity: .72; }
+  html[data-style="fluent"] .icon-btn:active { transform: none; opacity: .7; }
   html[data-style="fluent"] .icon-btn.on,
   html[data-style="fluent"] .dialog-actions .primary {
     background: var(--primary); border-color: transparent; color: var(--on-primary);
   }
 
-  /* rejilla del menú Inicio: relleno suave de 4 px bajo icono y etiqueta */
-  html[data-style="fluent"] .tile {
-    padding: 8px 4px 6px;
-    border-radius: 4px;
-    transition: background .1s linear, transform .16s var(--ease);
-  }
+  /* rejilla de anclados: relleno de 5 px al pasar por encima */
+  html[data-style="fluent"] .tile { padding: 8px 4px 6px; border-radius: 5px;
+                                    transition: background .1s linear; }
   html[data-style="fluent"] .tile:hover { background: var(--capa); }
   html[data-style="fluent"] .tile:active { background: var(--capa-2); }
-  html[data-style="fluent"] .face { box-shadow: none; border: 0; }
-  html[data-style="fluent"] .face.folder {
-    background: var(--surface);
-    border: 1px solid var(--outline);
-    border-bottom-color: var(--borde-alto);
-    gap: 4px; padding: 7px;
-  }
-  html[data-style="fluent"] .tile:hover .face { transform: none; }
+  html[data-style="fluent"] .tile:hover .face,
   html[data-style="fluent"] .tile:active .face { transform: none; }
-  html[data-style="fluent"] .tile.drop-into .face { transform: scale(1.05); border-color: var(--primary); }
-  html[data-style="fluent"] .app { padding: 8px 4px; border-radius: 4px; }
+  html[data-style="fluent"] .face { box-shadow: 0 2px 5px rgba(0,0,0,.16); border: 0; }
+  html[data-style="fluent"] .face.folder {
+    background: var(--capa-2); border: 1px solid var(--outline); gap: 4px; padding: 7px;
+  }
+  html[data-style="fluent"] .tile.drop-into .face { transform: scale(1.06); }
+  html[data-style="fluent"] .app { padding: 8px 4px; border-radius: 5px; }
   html[data-style="fluent"] .app:hover { background: var(--capa); transform: none; }
-  html[data-style="fluent"] .app-icon { box-shadow: none; }
   html[data-style="fluent"] .tile-host { display: none; }
   html[data-style="fluent"] .more-badge { border-radius: 999px; }
 
-  /* selección con la barrita de acento a la izquierda, como en NavigationView */
-  html[data-style="fluent"] .hits {
-    border-radius: 8px; padding: 4px; box-shadow: var(--shadow);
-    border-color: var(--outline);
+  /* iconos con el degradado suave de los iconos Fluent */
+  html[data-style="fluent"] .face.single,
+  html[data-style="fluent"] .app-icon,
+  html[data-style="fluent"] .mini { position: relative; overflow: hidden; }
+  html[data-style="fluent"] .face.single::after,
+  html[data-style="fluent"] .app-icon::after,
+  html[data-style="fluent"] .mini::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+    background: linear-gradient(142deg,
+      rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.06) 52%, rgba(0, 0, 0, 0.12) 100%);
   }
-  html[data-style="fluent"] .hit { border-radius: 4px; position: relative; }
+  html[data-style="fluent"] .app-icon { box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+
+  /* selección con la barrita de acento, como en NavigationView */
+  html[data-style="fluent"] .hits {
+    border-radius: 8px; padding: 4px; box-shadow: var(--shadow); border-color: var(--outline);
+  }
+  html[data-style="fluent"] .hit { border-radius: 5px; position: relative; }
   html[data-style="fluent"] .hit[aria-selected="true"] { background: var(--capa-2); color: var(--text); }
   html[data-style="fluent"] .hit[aria-selected="true"] .path { color: var(--muted); opacity: 1; }
   html[data-style="fluent"] .hit[aria-selected="true"]::before {
@@ -904,27 +927,20 @@
     border-radius: 2px; background: var(--primary);
   }
 
-  /* acrílico en el panel emergente */
-  html[data-style="fluent"] .panel {
-    border-radius: 8px;
-    border: 1px solid var(--outline);
-    background: var(--surface-2);
-  }
+  html[data-style="fluent"] .panel { border-radius: 12px; border: 1px solid var(--outline); }
   html[data-style="fluent"] .panel-head { border-bottom: 1px solid var(--outline); padding-bottom: 12px; }
-  html[data-style="fluent"] dialog { border-radius: 8px; background: var(--bg-2); }
+  html[data-style="fluent"] dialog { border-radius: 12px; background: var(--bg-2); }
   html[data-style="fluent"] .segmented {
-    background: var(--surface); border: 1px solid var(--outline); border-radius: 6px; padding: 3px;
+    background: var(--capa); border: 1px solid var(--outline); border-radius: 6px; padding: 3px;
   }
   html[data-style="fluent"] .segmented button { border-radius: 4px; }
   html[data-style="fluent"] .segmented button:hover[aria-pressed="false"] { background: var(--capa); }
   html[data-style="fluent"] label input[type="text"],
   html[data-style="fluent"] label select {
-    background: var(--surface); border-color: var(--outline);
-    border-bottom-color: var(--borde-alto); border-radius: 5px;
+    background: var(--bg-2); border-color: var(--outline); border-radius: 5px;
   }
   html[data-style="fluent"] .backup { border-radius: 5px; }
 
-  /* barras de desplazamiento finas de Windows 11 */
   html[data-style="fluent"] ::-webkit-scrollbar { width: 14px; height: 14px; }
   html[data-style="fluent"] ::-webkit-scrollbar-track { background: transparent; }
   html[data-style="fluent"] ::-webkit-scrollbar-thumb {
@@ -3072,7 +3088,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.9.0";
+  var VERSION = "1.11.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
