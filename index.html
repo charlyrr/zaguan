@@ -772,68 +772,168 @@
   html[data-style="minimo"] label input[type="text"],
   html[data-style="minimo"] label select { border-radius: 3px; background: transparent; }
 
-  /* ---------- NORDICO: lino, madera y pasteles apagados ---------- */
-  html[data-style="nordico"] {
-    --font: "Inter", "Noto Sans", "Cantarell", system-ui, sans-serif;
-    --font-display: var(--font);
-    --tile: 76px;
-    --r-face: 20px; --r-mini: 7px; --r-app: 16px; --r-panel: 26px;
-    --field-h: 60px; --r-field: 20px; --r-chip: 14px;
-    --blur-1: 10px; --blur-2: 14px; --blur-3: 18px; --sat: 96%;
-    --mesh-op: 0.28;
-    --icon-filter: saturate(0.42) brightness(1.14);
-    --grid-gap: 28px 16px;
-    --label-fs: 12.5px;
-    --glass: inset 0 1px 0 0 oklch(1 0 0 / 0.10);
+  /* ---------- FLUENT: Windows 11. Capas opacas, bordes asimétricos y acento ----------
+     Claves de Fluent Design: fondo Mica muy desaturado, tarjetas sólidas apiladas,
+     radios de 8 px en superficies y 4 px en controles, y el borde inferior más oscuro
+     que el resto (en oscuro, el superior más claro), que es lo que da el relieve sutil
+     de los controles de WinUI. El azul de Windows (#0078D4) sale del tono 258. */
+  html[data-style="fluent"] {
+    --font: "Segoe UI Variable Text", "Segoe UI", "Selawik", "Inter",
+            "Noto Sans", system-ui, sans-serif;
+    --font-display: "Segoe UI Variable Display", var(--font);
+    --tile: 64px;
+    --r-face: 8px; --r-mini: 3px; --r-app: 8px; --r-panel: 8px;
+    --field-h: 40px; --r-field: 8px; --r-chip: 4px;
+    --blur-1: 30px; --blur-2: 40px; --blur-3: 60px; --sat: 118%;
+    --mesh-op: 0.16;
+    --grid-gap: 18px 8px;
+    --label-fs: 12px; --label-tt: none; --label-ls: 0;
+    --glass: 0 0 0 0 transparent;
 
-    /* nogal: la base es calida y no depende del tono elegido */
-    --bg:        oklch(0.245 0.022 62);
-    --bg-2:      oklch(0.295 0.026 62);
-    --surface:   oklch(0.335 0.024 62 / 0.90);
-    --surface-2: oklch(0.395 0.028 62 / 0.95);
-    --outline:   oklch(0.50 0.030 62 / 0.5);
-    --text:      oklch(0.94 0.014 72);
-    --muted:     oklch(0.75 0.022 72);
-    --primary:   oklch(0.82 0.070 var(--hue));
-    --on-primary:oklch(0.25 0.030 var(--hue));
-    --shadow:    0 12px 28px -20px oklch(0.12 0.03 62 / 0.85);
-    --scrim:     oklch(0.20 0.02 62 / 0.6);
+    --bg:        #202020;
+    --bg-2:      #2B2B2B;
+    --surface:   #2D2D2D;
+    --surface-2: #333333;
+    --outline:   rgba(255, 255, 255, 0.075);
+    --borde-alto: rgba(255, 255, 255, 0.093);
+    --text:      #FFFFFF;
+    --muted:     rgba(255, 255, 255, 0.606);
+    --primary:   oklch(0.78 0.125 var(--hue));
+    --on-primary: #1B1B1B;
+    --shadow:    0 8px 16px rgba(0, 0, 0, 0.28);
+    --scrim:     rgba(18, 18, 18, 0.55);
+    --capa:      rgba(255, 255, 255, 0.061);
+    --capa-2:    rgba(255, 255, 255, 0.084);
   }
-  html[data-style="nordico"][data-mode="light"] {
-    --bg:        oklch(0.955 0.016 80);
-    --bg-2:      oklch(0.985 0.010 80);
-    --surface:   oklch(0.995 0.008 82 / 0.92);
-    --surface-2: oklch(0.945 0.018 80);
-    --outline:   oklch(0.80 0.022 72 / 0.75);
-    --text:      oklch(0.31 0.022 60);
-    --muted:     oklch(0.53 0.022 60);
-    --primary:   oklch(0.58 0.085 var(--hue));
-    --on-primary:oklch(0.99 0.008 80);
-    --shadow:    0 12px 26px -22px oklch(0.45 0.04 60 / 0.45);
-    --scrim:     oklch(0.88 0.02 80 / 0.6);
-    --glass:     inset 0 1px 0 0 oklch(1 0 0 / 0.7);
+  html[data-style="fluent"][data-mode="light"] {
+    --bg:        #F3F3F3;
+    --bg-2:      #FBFBFB;
+    --surface:   #FBFBFB;
+    --surface-2: #FFFFFF;
+    --outline:   rgba(0, 0, 0, 0.058);
+    --borde-alto: rgba(0, 0, 0, 0.092);
+    --text:      #1B1B1B;
+    --muted:     #5D5D5D;
+    --primary:   oklch(0.55 0.155 var(--hue));
+    --on-primary: #FFFFFF;
+    --shadow:    0 8px 16px rgba(0, 0, 0, 0.10);
+    --scrim:     rgba(243, 243, 243, 0.6);
+    --capa:      rgba(0, 0, 0, 0.037);
+    --capa-2:    rgba(0, 0, 0, 0.060);
   }
-  /* veta de madera: rayas verticales finas y muy tenues */
-  html[data-style="nordico"] body::after {
-    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background-image: repeating-linear-gradient(90deg,
-      oklch(0.45 0.06 55 / 0.055) 0 1px, transparent 1px 4px,
-      oklch(0.45 0.06 55 / 0.03) 4px 5px, transparent 5px 11px);
-  }
-  html[data-style="nordico"][data-mode="light"] body::after {
-    background-image: repeating-linear-gradient(90deg,
-      oklch(0.55 0.07 55 / 0.05) 0 1px, transparent 1px 4px,
-      oklch(0.55 0.07 55 / 0.028) 4px 5px, transparent 5px 11px);
-  }
-  html[data-style="nordico"] .blob { filter: saturate(34%) brightness(1.18); }
-  html[data-style="nordico"] .now .h { font-weight: 500; letter-spacing: -0.025em; }
-  html[data-style="nordico"] .face.folder { gap: 6px; padding: 10px; }
-  html[data-style="nordico"] .tile:hover .face { transform: translateY(-3px) scale(1.04); }
-  html[data-style="nordico"] .face.single { font-weight: 600; }
-  html[data-style="nordico"] .segmented.styles { border-radius: 18px; }
-  html[data-style="nordico"] label input[type="text"],
-  html[data-style="nordico"] label select { border-radius: 14px; }
 
+  /* Mica: el color del fondo apenas se intuye, muy desaturado */
+  html[data-style="fluent"] .blob { filter: saturate(22%) brightness(1.05); }
+  html[data-style="fluent"] .now .h { font-weight: 600; font-size: 36px; letter-spacing: -0.02em; }
+  html[data-style="fluent"] .now .d { font-size: 12px; letter-spacing: 0; }
+
+  /* TextBox de WinUI: capa sólida y filete inferior de acento al enfocar */
+  html[data-style="fluent"] .field {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-bottom: 1px solid var(--borde-alto);
+    box-shadow: none;
+    padding-left: 14px;
+  }
+  html[data-style="fluent"] .field:focus-within {
+    border-color: var(--outline);
+    border-bottom: 2px solid var(--primary);
+    transform: none;
+  }
+  html[data-style="fluent"] #q { font-size: 14.5px; }
+
+  /* botones: borde asimétrico, la firma visual de Fluent */
+  html[data-style="fluent"] .icon-btn,
+  html[data-style="fluent"] .engine-chip,
+  html[data-style="fluent"] .mini-btn,
+  html[data-style="fluent"] .dialog-actions button {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-bottom-color: var(--borde-alto);
+    box-shadow: none;
+  }
+  html[data-style="fluent"] .icon-btn { width: 36px; height: 36px; border-radius: 5px; }
+  html[data-style="fluent"] .icon-btn svg { width: 17px; height: 17px; }
+  html[data-style="fluent"] .icon-btn:hover,
+  html[data-style="fluent"] .engine-chip:hover,
+  html[data-style="fluent"] .mini-btn:hover,
+  html[data-style="fluent"] .dialog-actions button:hover {
+    background: var(--surface-2); color: var(--text); transform: none;
+  }
+  html[data-style="fluent"] .icon-btn:active { transform: none; opacity: .72; }
+  html[data-style="fluent"] .icon-btn.on,
+  html[data-style="fluent"] .dialog-actions .primary {
+    background: var(--primary); border-color: transparent; color: var(--on-primary);
+  }
+
+  /* rejilla del menú Inicio: relleno suave de 4 px bajo icono y etiqueta */
+  html[data-style="fluent"] .tile {
+    padding: 8px 4px 6px;
+    border-radius: 4px;
+    transition: background .1s linear, transform .16s var(--ease);
+  }
+  html[data-style="fluent"] .tile:hover { background: var(--capa); }
+  html[data-style="fluent"] .tile:active { background: var(--capa-2); }
+  html[data-style="fluent"] .face { box-shadow: none; border: 0; }
+  html[data-style="fluent"] .face.folder {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-bottom-color: var(--borde-alto);
+    gap: 4px; padding: 7px;
+  }
+  html[data-style="fluent"] .tile:hover .face { transform: none; }
+  html[data-style="fluent"] .tile:active .face { transform: none; }
+  html[data-style="fluent"] .tile.drop-into .face { transform: scale(1.05); border-color: var(--primary); }
+  html[data-style="fluent"] .app { padding: 8px 4px; border-radius: 4px; }
+  html[data-style="fluent"] .app:hover { background: var(--capa); transform: none; }
+  html[data-style="fluent"] .app-icon { box-shadow: none; }
+  html[data-style="fluent"] .tile-host { display: none; }
+  html[data-style="fluent"] .more-badge { border-radius: 999px; }
+
+  /* selección con la barrita de acento a la izquierda, como en NavigationView */
+  html[data-style="fluent"] .hits {
+    border-radius: 8px; padding: 4px; box-shadow: var(--shadow);
+    border-color: var(--outline);
+  }
+  html[data-style="fluent"] .hit { border-radius: 4px; position: relative; }
+  html[data-style="fluent"] .hit[aria-selected="true"] { background: var(--capa-2); color: var(--text); }
+  html[data-style="fluent"] .hit[aria-selected="true"] .path { color: var(--muted); opacity: 1; }
+  html[data-style="fluent"] .hit[aria-selected="true"]::before {
+    content: ""; position: absolute; left: 3px; top: 50%;
+    width: 3px; height: 16px; margin-top: -8px;
+    border-radius: 2px; background: var(--primary);
+  }
+
+  /* acrílico en el panel emergente */
+  html[data-style="fluent"] .panel {
+    border-radius: 8px;
+    border: 1px solid var(--outline);
+    background: var(--surface-2);
+  }
+  html[data-style="fluent"] .panel-head { border-bottom: 1px solid var(--outline); padding-bottom: 12px; }
+  html[data-style="fluent"] dialog { border-radius: 8px; background: var(--bg-2); }
+  html[data-style="fluent"] .segmented {
+    background: var(--surface); border: 1px solid var(--outline); border-radius: 6px; padding: 3px;
+  }
+  html[data-style="fluent"] .segmented button { border-radius: 4px; }
+  html[data-style="fluent"] .segmented button:hover[aria-pressed="false"] { background: var(--capa); }
+  html[data-style="fluent"] label input[type="text"],
+  html[data-style="fluent"] label select {
+    background: var(--surface); border-color: var(--outline);
+    border-bottom-color: var(--borde-alto); border-radius: 5px;
+  }
+  html[data-style="fluent"] .backup { border-radius: 5px; }
+
+  /* barras de desplazamiento finas de Windows 11 */
+  html[data-style="fluent"] ::-webkit-scrollbar { width: 14px; height: 14px; }
+  html[data-style="fluent"] ::-webkit-scrollbar-track { background: transparent; }
+  html[data-style="fluent"] ::-webkit-scrollbar-thumb {
+    background: var(--muted); border-radius: 999px;
+    border: 5px solid transparent; background-clip: content-box;
+  }
+  html[data-style="fluent"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--text); background-clip: content-box;
+  }
 
   /* ---------- BREEZE: KDE Plasma 6. Redondeado, translúcido y con desenfoque ----------
      Plasma 6 suavizó mucho el tema: los popups son translúcidos con blur, las esquinas
@@ -1082,7 +1182,7 @@
     <button data-style="clasico" data-i18n="styleClassic"></button>
     <button data-style="cristal" data-i18n="styleGlass"></button>
     <button data-style="minimo" data-i18n="styleMinimal"></button>
-    <button data-style="nordico" data-i18n="styleNordic"></button>
+    <button data-style="fluent" data-i18n="styleFluent"></button>
     <button data-style="breeze" data-i18n="styleBreeze"></button>
   </div>
   <label><span data-i18n="engine"></span><select id="cEngine"></select></label>
@@ -1154,7 +1254,7 @@
       "styleClassic": "Classic",
       "styleGlass": "Glass",
       "styleMinimal": "Minimal",
-      "styleNordic": "Nordic",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Search engine",
       "customTemplate": "Custom template (use %s)",
@@ -1231,7 +1331,7 @@
       "styleClassic": "Clásico",
       "styleGlass": "Cristal",
       "styleMinimal": "Mínimo",
-      "styleNordic": "Nórdico",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Buscador",
       "customTemplate": "Plantilla propia (usa %s)",
@@ -1308,7 +1408,7 @@
       "styleClassic": "Classique",
       "styleGlass": "Verre",
       "styleMinimal": "Minimal",
-      "styleNordic": "Nordique",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Moteur de recherche",
       "customTemplate": "Modèle personnalisé (utilisez %s)",
@@ -1385,7 +1485,7 @@
       "styleClassic": "Klassisch",
       "styleGlass": "Glas",
       "styleMinimal": "Minimal",
-      "styleNordic": "Nordisch",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Suchmaschine",
       "customTemplate": "Eigene Vorlage (nutze %s)",
@@ -1462,7 +1562,7 @@
       "styleClassic": "Classico",
       "styleGlass": "Vetro",
       "styleMinimal": "Minimale",
-      "styleNordic": "Nordico",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Motore di ricerca",
       "customTemplate": "Modello personalizzato (usa %s)",
@@ -1539,7 +1639,7 @@
       "styleClassic": "Clássico",
       "styleGlass": "Vidro",
       "styleMinimal": "Mínimo",
-      "styleNordic": "Nórdico",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Motor de busca",
       "customTemplate": "Modelo próprio (use %s)",
@@ -1616,7 +1716,7 @@
       "styleClassic": "Классический",
       "styleGlass": "Стекло",
       "styleMinimal": "Минимальный",
-      "styleNordic": "Северный",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "Поисковик",
       "customTemplate": "Свой шаблон (используйте %s)",
@@ -1693,7 +1793,7 @@
       "styleClassic": "经典",
       "styleGlass": "玻璃",
       "styleMinimal": "极简",
-      "styleNordic": "北欧",
+      "styleFluent": "Fluent",
       "styleBreeze": "Breeze",
       "engine": "搜索引擎",
       "customTemplate": "自定义模板（使用 %s）",
@@ -1833,7 +1933,8 @@
     if (["auto", "light", "dark"].indexOf(s.mode) < 0) s.mode = "auto";
     if (s.lang !== "auto" && !I18N[s.lang]) s.lang = "auto";
     if (s.style === "elegante") s.style = "clasico";
-    if (["material", "clasico", "cristal", "minimo", "nordico", "breeze"].indexOf(s.style) < 0) s.style = "material";
+    if (s.style === "nordico") s.style = "fluent";   // el nórdico se retiró en la 1.9
+    if (["material", "clasico", "cristal", "minimo", "fluent", "breeze"].indexOf(s.style) < 0) s.style = "material";
     if (!s.engine || !ENGINES[s.engine]) s.engine = "ddg";
     return s;
   }
@@ -1869,7 +1970,7 @@
 
   /* ---------------- parametros de URL ----------------
      ?demo=1                 carga el conjunto de ejemplo y desactiva el guardado
-     ?style=cristal          fuerza un estilo (material|clasico|cristal|minimo|nordico)
+     ?style=cristal          fuerza un estilo (material|clasico|cristal|minimo|fluent|breeze)
      ?mode=light             fuerza el modo (auto|light|dark)
      ?hue=258                fuerza el tono semilla (0-359)
      Sirven para enlazar cada estilo desde el README y para hacer capturas repetibles. */
@@ -2971,7 +3072,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.8.0";
+  var VERSION = "1.9.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 

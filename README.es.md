@@ -9,8 +9,9 @@ favoritos al estilo del lanzador de Android y seis estilos visuales. Un único H
 dependencias, sin compilación y sin una sola petición a servidores de terceros.
 
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-8A9A5B.svg?style=flat-square)](LICENSE)
-![Fichero único](https://img.shields.io/badge/fichero%20único-113%20KB-4FB6C4?style=flat-square)
+![Fichero único](https://img.shields.io/badge/fichero%20único-130%20KB-4FB6C4?style=flat-square)
 ![Sin dependencias](https://img.shields.io/badge/dependencias-0-E8A33D?style=flat-square)
+![Estilos](https://img.shields.io/badge/estilos-6-C77DBA?style=flat-square)
 ![Idiomas](https://img.shields.io/badge/idiomas-8-9B7EDE?style=flat-square)
 
 [English](README.md) · **Español**
@@ -22,7 +23,7 @@ dependencias, sin compilación y sin una sola petición a servidores de terceros
 <br>
 
 <div align="center">
-  <img src="capturas/vivo.png" alt="Zaguán, estilo Vivo" width="820">
+  <img src="capturas/vivo-dark.png" alt="Zaguán, estilo Vivo" width="820">
 </div>
 
 <br>
@@ -33,11 +34,14 @@ dependencias, sin compilación y sin una sola petición a servidores de terceros
 
 Seis acabados, cada uno con su variante clara y oscura.
 
-|  |  |
-|:---:|:---:|
-| <img src="capturas/vivo.png" width="400"><br>**Vivo** — Material You | <img src="capturas/clasico.png" width="400"><br>**Clásico** — Mac OS X de la vieja escuela |
-| <img src="capturas/cristal.png" width="400"><br>**Cristal** — vidrio profundo | <img src="capturas/minimo.png" width="400"><br>**Mínimo** — monocromo, a un filete |
-| <img src="capturas/nordico.png" width="400"><br>**Nórdico** — lino y madera | <img src="capturas/breeze.png" width="400"><br>**Breeze** — KDE Plasma |
+| Estilo | Claro | Oscuro |
+|:---|:---:|:---:|
+| **Vivo**<br><sub>Material You</sub> | <img src="capturas/vivo-light.png" width="340"> | <img src="capturas/vivo-dark.png" width="340"> |
+| **Clásico**<br><sub>Mac OS X de la vieja escuela</sub> | <img src="capturas/clasico-light.png" width="340"> | <img src="capturas/clasico-dark.png" width="340"> |
+| **Cristal**<br><sub>Vidrio profundo</sub> | <img src="capturas/cristal-light.png" width="340"> | <img src="capturas/cristal-dark.png" width="340"> |
+| **Mínimo**<br><sub>Monocromo, a un filete</sub> | <img src="capturas/minimo-light.png" width="340"> | <img src="capturas/minimo-dark.png" width="340"> |
+| **Fluent**<br><sub>Windows 11</sub> | <img src="capturas/fluent-light.png" width="340"> | <img src="capturas/fluent-dark.png" width="340"> |
+| **Breeze**<br><sub>KDE Plasma</sub> | <img src="capturas/breeze-light.png" width="340"> | <img src="capturas/breeze-dark.png" width="340"> |
 
 <table>
 <tr><th align="left">Estilo</th><th align="left">Idea</th><th align="left">Rasgos</th></tr>
@@ -45,13 +49,13 @@ Seis acabados, cada uno con su variante clara y oscura.
 <tr><td><b>Clásico</b></td><td>Mac OS X de la vieja escuela</td><td>Grises azulados, biseles, iconos con brillo Aqua, buscador hundido</td></tr>
 <tr><td><b>Cristal</b></td><td>Vidrio profundo</td><td>Superficies al 10 %, desenfoque de 58 px, destello diagonal y cantos con dispersión cromática</td></tr>
 <tr><td><b>Mínimo</b></td><td>Monocromo</td><td>Iconos de contorno, cero sombras, buscador reducido a una línea</td></tr>
-<tr><td><b>Nórdico</b></td><td>Lino y madera</td><td>Base cálida, veta sutil, iconos en pastel apagado</td></tr>
+<tr><td><b>Fluent</b></td><td>Windows 11</td><td>Fondo Mica, tarjetas opacas apiladas, bordes de control asimétricos, barra de acento en la selección</td></tr>
 <tr><td><b>Breeze</b></td><td>KDE Plasma</td><td>Superficies planas, marcos de 1 px, paleta oficial de Breeze, selección en azul Plasma</td></tr>
 </table>
 
 El color de acento se genera a partir de un único tono semilla que eliges tú, así que todos
 los estilos mantienen la legibilidad sea cual sea el color. Breeze luce de fábrica con el
-tono **236**, que corresponde al azul Plasma.
+tono **236** (azul Plasma) y Fluent con el **258** (azul de Windows).
 
 ---
 
@@ -182,7 +186,7 @@ navegador, o usar cualquier extensión de tipo *custom new tab*.
 | Parámetro | Valores | Efecto |
 |---|---|---|
 | `demo` | `1` | Carga favoritos de ejemplo y **no escribe nada** en el navegador |
-| `style` | `material`, `clasico`, `cristal`, `minimo`, `nordico`, `breeze` | Fuerza el estilo |
+| `style` | `material`, `clasico`, `cristal`, `minimo`, `fluent`, `breeze` | Fuerza el estilo |
 | `mode` | `auto`, `light`, `dark` | Fuerza claro u oscuro |
 | `lang` | `en`, `es`, `fr`, `de`, `it`, `pt`, `ru`, `zh` | Fuerza el idioma |
 | `hue` | `0`–`359` | Fuerza el tono semilla |

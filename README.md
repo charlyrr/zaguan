@@ -9,8 +9,9 @@ and six visual styles. One HTML file — no dependencies, no build step, and not
 request to a third-party server.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-8A9A5B.svg?style=flat-square)](LICENSE)
-![Single file](https://img.shields.io/badge/single%20file-113%20KB-4FB6C4?style=flat-square)
+![Single file](https://img.shields.io/badge/single%20file-130%20KB-4FB6C4?style=flat-square)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-E8A33D?style=flat-square)
+![Styles](https://img.shields.io/badge/styles-6-C77DBA?style=flat-square)
 ![Languages](https://img.shields.io/badge/languages-8-9B7EDE?style=flat-square)
 
 **English** · [Español](README.es.md)
@@ -22,7 +23,7 @@ request to a third-party server.
 <br>
 
 <div align="center">
-  <img src="capturas/vivo.png" alt="Zaguán, Vivid style" width="820">
+  <img src="capturas/vivo-dark.png" alt="Zaguán, Vivid style" width="820">
 </div>
 
 <br>
@@ -33,11 +34,14 @@ request to a third-party server.
 
 Six looks, each with its own light and dark variant.
 
-|  |  |
-|:---:|:---:|
-| <img src="capturas/vivo.png" width="400"><br>**Vivid** — Material You | <img src="capturas/clasico.png" width="400"><br>**Classic** — old-school Mac OS X |
-| <img src="capturas/cristal.png" width="400"><br>**Glass** — deep frosted glass | <img src="capturas/minimo.png" width="400"><br>**Minimal** — monochrome, hairline |
-| <img src="capturas/nordico.png" width="400"><br>**Nordic** — linen and wood | <img src="capturas/breeze.png" width="400"><br>**Breeze** — KDE Plasma |
+| Style | Light | Dark |
+|:---|:---:|:---:|
+| **Vivid**<br><sub>Material You</sub> | <img src="capturas/vivo-light.png" width="340"> | <img src="capturas/vivo-dark.png" width="340"> |
+| **Classic**<br><sub>Old-school Mac OS X</sub> | <img src="capturas/clasico-light.png" width="340"> | <img src="capturas/clasico-dark.png" width="340"> |
+| **Glass**<br><sub>Deep frosted glass</sub> | <img src="capturas/cristal-light.png" width="340"> | <img src="capturas/cristal-dark.png" width="340"> |
+| **Minimal**<br><sub>Monochrome, hairline</sub> | <img src="capturas/minimo-light.png" width="340"> | <img src="capturas/minimo-dark.png" width="340"> |
+| **Fluent**<br><sub>Windows 11</sub> | <img src="capturas/fluent-light.png" width="340"> | <img src="capturas/fluent-dark.png" width="340"> |
+| **Breeze**<br><sub>KDE Plasma</sub> | <img src="capturas/breeze-light.png" width="340"> | <img src="capturas/breeze-dark.png" width="340"> |
 
 <table>
 <tr><th align="left">Style</th><th align="left">Idea</th><th align="left">Traits</th></tr>
@@ -45,13 +49,13 @@ Six looks, each with its own light and dark variant.
 <tr><td><b>Classic</b></td><td>Old-school Mac OS X</td><td>Blue-grey chrome, bevels, Aqua-style glossy icons, inset search field</td></tr>
 <tr><td><b>Glass</b></td><td>Deep frosted glass</td><td>10 % opaque surfaces, 58 px blur, diagonal sheen, chromatic edges</td></tr>
 <tr><td><b>Minimal</b></td><td>Monochrome</td><td>Outline icons, no shadows, search reduced to a single rule</td></tr>
-<tr><td><b>Nordic</b></td><td>Linen and wood</td><td>Warm base, subtle grain, muted pastel icons</td></tr>
+<tr><td><b>Fluent</b></td><td>Windows 11</td><td>Mica background, stacked opaque cards, asymmetric control borders, accent selection bar</td></tr>
 <tr><td><b>Breeze</b></td><td>KDE Plasma</td><td>Flat surfaces, 1 px frames, official Breeze palette, Plasma-blue selection</td></tr>
 </table>
 
 The accent colour is generated from a single seed hue you pick, so every style stays
-readable whichever colour you choose. Breeze looks factory-fresh at hue **236**, which
-lands on Plasma Blue.
+readable whichever colour you choose. Breeze looks factory-fresh at hue **236** (Plasma Blue),
+and Fluent at hue **258** (Windows Blue).
 
 ---
 
@@ -181,7 +185,7 @@ Useful for linking a specific configuration or automating screenshots:
 | Parameter | Values | Effect |
 |---|---|---|
 | `demo` | `1` | Loads sample bookmarks and **writes nothing** to the browser |
-| `style` | `material`, `clasico`, `cristal`, `minimo`, `nordico`, `breeze` | Forces a style |
+| `style` | `material`, `clasico`, `cristal`, `minimo`, `fluent`, `breeze` | Forces a style |
 | `mode` | `auto`, `light`, `dark` | Forces light or dark |
 | `lang` | `en`, `es`, `fr`, `de`, `it`, `pt`, `ru`, `zh` | Forces a language |
 | `hue` | `0`–`359` | Forces the seed hue |
