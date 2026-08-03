@@ -1221,6 +1221,7 @@
   <label class="row"><input type="checkbox" id="cHistory"> <span data-i18n="useHistory"></span></label>
   <label class="row"><input type="checkbox" id="cRemote"> <span data-i18n="useRemote"></span></label>
   <p class="aviso" data-i18n="remoteWarn"></p>
+  <p class="aviso" id="sinSug" hidden></p>
   <div class="backup-tools">
     <button class="mini-btn" id="bClearHist" data-i18n="clearHistory"></button>
   </div>
@@ -1296,6 +1297,7 @@
       "clearHistory": "Clear history",
       "historyTag": "History",
       "remoteTag": "Suggestion",
+      "noSuggest": "{engine} doesn't publish a suggestions endpoint — bookmarks and history only.",
       "styleBreeze": "Breeze",
       "engine": "Search engine",
       "customTemplate": "Custom template (use %s)",
@@ -1380,6 +1382,7 @@
       "clearHistory": "Borrar historial",
       "historyTag": "Historial",
       "remoteTag": "Sugerencia",
+      "noSuggest": "{engine} no publica un endpoint de sugerencias: solo favoritos e historial.",
       "styleBreeze": "Breeze",
       "engine": "Buscador",
       "customTemplate": "Plantilla propia (usa %s)",
@@ -1464,6 +1467,7 @@
       "clearHistory": "Effacer l'historique",
       "historyTag": "Historique",
       "remoteTag": "Suggestion",
+      "noSuggest": "{engine} ne publie pas de point d'accès de suggestions : favoris et historique uniquement.",
       "styleBreeze": "Breeze",
       "engine": "Moteur de recherche",
       "customTemplate": "Modèle personnalisé (utilisez %s)",
@@ -1548,6 +1552,7 @@
       "clearHistory": "Verlauf löschen",
       "historyTag": "Verlauf",
       "remoteTag": "Vorschlag",
+      "noSuggest": "{engine} bietet keinen Vorschlags-Endpunkt — nur Lesezeichen und Verlauf.",
       "styleBreeze": "Breeze",
       "engine": "Suchmaschine",
       "customTemplate": "Eigene Vorlage (nutze %s)",
@@ -1632,6 +1637,7 @@
       "clearHistory": "Cancella cronologia",
       "historyTag": "Cronologia",
       "remoteTag": "Suggerimento",
+      "noSuggest": "{engine} non pubblica un endpoint di suggerimenti: solo preferiti e cronologia.",
       "styleBreeze": "Breeze",
       "engine": "Motore di ricerca",
       "customTemplate": "Modello personalizzato (usa %s)",
@@ -1716,6 +1722,7 @@
       "clearHistory": "Limpar histórico",
       "historyTag": "Histórico",
       "remoteTag": "Sugestão",
+      "noSuggest": "{engine} não publica um endpoint de sugestões: apenas favoritos e histórico.",
       "styleBreeze": "Breeze",
       "engine": "Motor de busca",
       "customTemplate": "Modelo próprio (use %s)",
@@ -1800,6 +1807,7 @@
       "clearHistory": "Очистить историю",
       "historyTag": "История",
       "remoteTag": "Подсказка",
+      "noSuggest": "{engine} не предоставляет сервис подсказок — только закладки и история.",
       "styleBreeze": "Breeze",
       "engine": "Поисковик",
       "customTemplate": "Свой шаблон (используйте %s)",
@@ -1884,6 +1892,7 @@
       "clearHistory": "清除历史",
       "historyTag": "历史",
       "remoteTag": "建议",
+      "noSuggest": "{engine} 未提供建议接口，仅显示书签和历史。",
       "styleBreeze": "Breeze",
       "engine": "搜索引擎",
       "customTemplate": "自定义模板（使用 %s）",
@@ -1997,20 +2006,20 @@
     ddg:       { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=%s" },
     brave:     { label: "Brave",      url: "https://search.brave.com/search?q=%s" },
     startpage: { label: "Startpage",  url: "https://www.startpage.com/sp/search?query=%s" },
-    wiki:      { label: "Wikipedia",  url: "https://es.wikipedia.org/w/index.php?search=%s" },
+    wiki:      { label: "Wikipedia",  url: "https://%lang.wikipedia.org/w/index.php?search=%s" },
     google:    { label: "Google",     url: "https://www.google.com/search?q=%s" },
     custom:    { label: "Propio",     url: "" }
   };
 
   // Endpoints OpenSearch: todos devuelven ["consulta", ["sug1", "sug2", ...]].
   // Solo se usan si el usuario activa las sugerencias remotas en Ajustes.
+  // Estos endpoints no permiten CORS, así que se piden por JSONP (%cb = nombre de la
+  // función de retorno). Brave y Startpage no publican endpoint de sugerencias: con esos
+  // buscadores solo habrá favoritos e historial.
   var SUGGEST = {
-    ddg:       "https://duckduckgo.com/ac/?type=list&q=%s",
-    brave:     "https://search.brave.com/api/suggest?rich=false&q=%s",
-    startpage: "https://www.startpage.com/suggestions?format=opensearch&q=%s",
-    wiki:      "https://es.wikipedia.org/w/api.php?action=opensearch&limit=5&origin=*&search=%s",
-    google:    "https://suggestqueries.google.com/complete/search?client=firefox&q=%s",
-    custom:    ""
+    ddg:    "https://duckduckgo.com/ac/?type=list&callback=%cb&q=%s",
+    google: "https://suggestqueries.google.com/complete/search?client=firefox&callback=%cb&q=%s",
+    wiki:   "https://%lang.wikipedia.org/w/api.php?action=opensearch&format=json&limit=5&callback=%cb&search=%s"
   };
 
   function uid() { return Math.random().toString(36).slice(2, 9); }
@@ -2167,7 +2176,7 @@
   function searchUrl(term) {
     var e = state.engine === "custom" ? state.custom : ENGINES[state.engine].url;
     if (!e) e = ENGINES.ddg.url;
-    return e.replace("%s", encodeURIComponent(term));
+    return e.replace("%lang", lang).replace("%s", encodeURIComponent(term));
   }
   function go(url, newTab) {
     if (newTab) window.open(url, "_blank", "noopener");
@@ -2869,30 +2878,68 @@
   }
 
   /* ---------------- sugerencias remotas (opcionales) ---------------- */
-  var peticion = null;
   var temporizador = null;
+  var jsonpN = 0;
+  var jsonpActual = null;
+
+  function limpiarJsonp() {
+    if (!jsonpActual) return;
+    var j = jsonpActual;
+    jsonpActual = null;
+    if (j.timer) window.clearTimeout(j.timer);
+    try { delete window[j.nombre]; } catch (e) { window[j.nombre] = undefined; }
+    if (j.script && j.script.parentNode) j.script.parentNode.removeChild(j.script);
+  }
+
+  // convierte la respuesta OpenSearch ["consulta", ["s1","s2"]] en nuestro formato
+  function parseOpenSearch(d) {
+    var lista = (Array.isArray(d) && Array.isArray(d[1])) ? d[1] : [];
+    return lista.slice(0, 4).map(function (x) {
+      return { kind: "remote", q: typeof x === "string" ? x : (x && x.phrase) || "" };
+    }).filter(function (x) { return x.q; });
+  }
 
   function pedirRemotas(v, cb) {
     if (!state.useRemote) return cb([]);
-    var plantilla = state.engine === "custom" ? state.customSuggest : SUGGEST[state.engine];
-    if (!plantilla) return cb([]);
-    if (peticion) peticion.abort();          // cancela la anterior si aún vuela
-    peticion = new AbortController();
-    fetch(plantilla.replace("%s", encodeURIComponent(v)), {
-      signal: peticion.signal,
-      credentials: "omit",
-      referrerPolicy: "no-referrer",
-      mode: "cors"
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        var lista = (Array.isArray(d) && Array.isArray(d[1])) ? d[1] : [];
-        cb(lista.slice(0, 4).map(function (q) {
-          return { kind: "remote", q: typeof q === "string" ? q : (q && q.phrase) || "" };
-        }).filter(function (x) { return x.q; }));
-      })
-      // si el buscador no permite CORS, simplemente no hay sugerencias remotas
-      .catch(function () { cb([]); });
+
+    // el buscador propio se pide por fetch: JSONP ejecutaría código de una URL
+    // que no controlamos, y aquí la pone el usuario
+    if (state.engine === "custom") {
+      if (!state.customSuggest) return cb([]);
+      fetch(state.customSuggest.replace("%s", encodeURIComponent(v)),
+            { credentials: "omit", referrerPolicy: "no-referrer" })
+        .then(function (r) { return r.json(); })
+        .then(function (d) { cb(parseOpenSearch(d)); })
+        .catch(function () { cb([]); });
+      return;
+    }
+
+    var plantilla = SUGGEST[state.engine];
+    if (!plantilla) return cb([]);           // Brave y Startpage no tienen endpoint
+
+    limpiarJsonp();
+    var nombre = "__zaguanSug" + (++jsonpN);
+    var script = document.createElement("script");
+    var j = { nombre: nombre, script: script, timer: null };
+    jsonpActual = j;
+
+    window[nombre] = function (d) {
+      if (jsonpActual !== j) return;         // llegó tarde, ya hay otra consulta
+      limpiarJsonp();
+      cb(parseOpenSearch(d));
+    };
+
+    script.src = plantilla
+      .replace("%cb", nombre)
+      .replace("%lang", lang)
+      .replace("%s", encodeURIComponent(v));
+    script.referrerPolicy = "no-referrer";
+    script.onerror = function () { if (jsonpActual === j) { limpiarJsonp(); cb([]); } };
+    j.timer = window.setTimeout(function () {
+      if (jsonpActual === j) { limpiarJsonp(); cb([]); }
+    }, 3000);
+
+    document.head.appendChild(script);
   }
 
   function allLinks() {
@@ -3223,10 +3270,13 @@
     document.getElementById("cFavicons").checked = !!state.favicons;
     document.getElementById("cHistory").checked = !!state.useHistory;
     document.getElementById("cRemote").checked = !!state.useRemote;
+    avisoSinSugerencias();
     paintSeeds(); paintModes(); paintStyles(); paintBackups();
     cfgDlg.showModal();
   });
-  cEngine.addEventListener("change", function () { state.engine = cEngine.value; engineLabel(); save(); });
+  cEngine.addEventListener("change", function () {
+    state.engine = cEngine.value; engineLabel(); save(); avisoSinSugerencias();
+  });
   document.getElementById("cCustom").addEventListener("change", function (ev) { state.custom = ev.target.value.trim(); save(); });
   document.getElementById("cFavicons").addEventListener("change", function (ev) {
     state.favicons = ev.target.checked; commit();
@@ -3235,8 +3285,20 @@
     state.useHistory = ev.target.checked; save();
   });
   document.getElementById("cRemote").addEventListener("change", function (ev) {
-    state.useRemote = ev.target.checked; save();
+    state.useRemote = ev.target.checked; save(); avisoSinSugerencias();
   });
+
+  // avisa si el buscador elegido no tiene endpoint, para que no parezca averiado
+  function avisoSinSugerencias() {
+    var el = document.getElementById("sinSug");
+    var hay = state.engine === "custom" ? !!state.customSuggest : !!SUGGEST[state.engine];
+    if (state.useRemote && !hay) {
+      el.textContent = t("noSuggest", { engine: ENGINES[state.engine].label });
+      el.hidden = false;
+    } else {
+      el.hidden = true;
+    }
+  }
   document.getElementById("bClearHist").addEventListener("click", function () {
     state.history = [];
     save();
@@ -3304,7 +3366,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.12.0";
+  var VERSION = "1.13.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
