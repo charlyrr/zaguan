@@ -70,7 +70,9 @@ navigates instead of searching.
 As you type, matching bookmarks appear with the folder they live in, followed by your own
 previous searches. Arrows to pick, Enter to open. Search-engine suggestions are available
 too, but **off by default** — they would send every keystroke to the engine, so turning
-them on is an explicit choice.
+them on is an explicit choice. Engine suggestions work with Google and Wikipedia;
+DuckDuckGo, Brave and Startpage don't allow browser pages to query their endpoints, so
+with those you get bookmarks and history only (Settings says so).
 
 **Launcher-style folders**
 A compact icon with a 2×2 preview that expands into a panel via *container transform* —

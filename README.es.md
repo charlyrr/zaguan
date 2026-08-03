@@ -70,7 +70,9 @@ lugar de buscar.
 Al teclear aparecen los enlaces que coinciden, con la carpeta a la que pertenecen, seguidos
 de tus propias búsquedas anteriores. Flechas para elegir, Enter para abrir. También hay
 sugerencias del buscador, pero **desactivadas por defecto**: enviarían cada pulsación al
-buscador, así que activarlas es una decisión explícita.
+buscador, así que activarlas es una decisión explícita. Funcionan con Google y Wikipedia;
+DuckDuckGo, Brave y Startpage no permiten que una página web consulte sus endpoints, así
+que con ellos solo hay favoritos e historial (Ajustes lo indica).
 
 **Carpetas tipo lanzador**
 Icono compacto con vista previa 2×2 que se expande en un panel mediante *container

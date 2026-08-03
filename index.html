@@ -1298,6 +1298,7 @@
       "historyTag": "History",
       "remoteTag": "Suggestion",
       "noSuggest": "{engine} doesn't publish a suggestions endpoint — bookmarks and history only.",
+      "fileWarn": "Opened as a local file — the browser blocks suggestion requests here. Serve the page over http://localhost to use them.",
       "styleBreeze": "Breeze",
       "engine": "Search engine",
       "customTemplate": "Custom template (use %s)",
@@ -1383,6 +1384,7 @@
       "historyTag": "Historial",
       "remoteTag": "Sugerencia",
       "noSuggest": "{engine} no publica un endpoint de sugerencias: solo favoritos e historial.",
+      "fileWarn": "Abierta como fichero local: el navegador bloquea aquí las peticiones de sugerencias. Sirve la página por http://localhost para usarlas.",
       "styleBreeze": "Breeze",
       "engine": "Buscador",
       "customTemplate": "Plantilla propia (usa %s)",
@@ -1468,6 +1470,7 @@
       "historyTag": "Historique",
       "remoteTag": "Suggestion",
       "noSuggest": "{engine} ne publie pas de point d'accès de suggestions : favoris et historique uniquement.",
+      "fileWarn": "Ouverte comme fichier local : le navigateur bloque ici les requêtes de suggestions. Servez la page via http://localhost pour les utiliser.",
       "styleBreeze": "Breeze",
       "engine": "Moteur de recherche",
       "customTemplate": "Modèle personnalisé (utilisez %s)",
@@ -1553,6 +1556,7 @@
       "historyTag": "Verlauf",
       "remoteTag": "Vorschlag",
       "noSuggest": "{engine} bietet keinen Vorschlags-Endpunkt — nur Lesezeichen und Verlauf.",
+      "fileWarn": "Als lokale Datei geöffnet — der Browser blockiert hier Vorschlagsanfragen. Liefere die Seite über http://localhost aus, um sie zu nutzen.",
       "styleBreeze": "Breeze",
       "engine": "Suchmaschine",
       "customTemplate": "Eigene Vorlage (nutze %s)",
@@ -1638,6 +1642,7 @@
       "historyTag": "Cronologia",
       "remoteTag": "Suggerimento",
       "noSuggest": "{engine} non pubblica un endpoint di suggerimenti: solo preferiti e cronologia.",
+      "fileWarn": "Aperta come file locale: il browser blocca qui le richieste di suggerimenti. Servi la pagina via http://localhost per usarle.",
       "styleBreeze": "Breeze",
       "engine": "Motore di ricerca",
       "customTemplate": "Modello personalizzato (usa %s)",
@@ -1723,6 +1728,7 @@
       "historyTag": "Histórico",
       "remoteTag": "Sugestão",
       "noSuggest": "{engine} não publica um endpoint de sugestões: apenas favoritos e histórico.",
+      "fileWarn": "Aberta como ficheiro local: o navegador bloqueia aqui os pedidos de sugestões. Sirva a página por http://localhost para as usar.",
       "styleBreeze": "Breeze",
       "engine": "Motor de busca",
       "customTemplate": "Modelo próprio (use %s)",
@@ -1808,6 +1814,7 @@
       "historyTag": "История",
       "remoteTag": "Подсказка",
       "noSuggest": "{engine} не предоставляет сервис подсказок — только закладки и история.",
+      "fileWarn": "Открыто как локальный файл — браузер блокирует здесь запросы подсказок. Откройте страницу через http://localhost, чтобы ими пользоваться.",
       "styleBreeze": "Breeze",
       "engine": "Поисковик",
       "customTemplate": "Свой шаблон (используйте %s)",
@@ -1893,6 +1900,7 @@
       "historyTag": "历史",
       "remoteTag": "建议",
       "noSuggest": "{engine} 未提供建议接口，仅显示书签和历史。",
+      "fileWarn": "以本地文件方式打开时，浏览器会拦截建议请求。请通过 http://localhost 提供页面以使用建议。",
       "styleBreeze": "Breeze",
       "engine": "搜索引擎",
       "customTemplate": "自定义模板（使用 %s）",
@@ -2013,13 +2021,16 @@
 
   // Endpoints OpenSearch: todos devuelven ["consulta", ["sug1", "sug2", ...]].
   // Solo se usan si el usuario activa las sugerencias remotas en Ajustes.
-  // Estos endpoints no permiten CORS, así que se piden por JSONP (%cb = nombre de la
-  // función de retorno). Brave y Startpage no publican endpoint de sugerencias: con esos
-  // buscadores solo habrá favoritos e historial.
+  /* Cada buscador ofrece dos vías posibles: f = fetch con CORS, j = JSONP de respaldo.
+     Se intenta fetch primero y, si falla, JSONP. Wikipedia garantiza CORS con origin=*.
+     Verificado en agosto de 2026: Google y Wikipedia responden; DuckDuckGo no permite
+     CORS y su endpoint ya ignora el callback de JSONP, y Brave y Startpage no publican
+     endpoint. Con esos tres solo habrá favoritos e historial, y Ajustes lo avisa. */
   var SUGGEST = {
-    ddg:    "https://duckduckgo.com/ac/?type=list&callback=%cb&q=%s",
-    google: "https://suggestqueries.google.com/complete/search?client=firefox&callback=%cb&q=%s",
-    wiki:   "https://%lang.wikipedia.org/w/api.php?action=opensearch&format=json&limit=5&callback=%cb&search=%s"
+    google: { f: "https://suggestqueries.google.com/complete/search?client=firefox&q=%s",
+              j: "https://suggestqueries.google.com/complete/search?client=firefox&callback=%cb&q=%s" },
+    wiki:   { f: "https://%lang.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&limit=5&search=%s",
+              j: "https://%lang.wikipedia.org/w/api.php?action=opensearch&format=json&limit=5&callback=%cb&search=%s" }
   };
 
   function uid() { return Math.random().toString(36).slice(2, 9); }
@@ -2891,32 +2902,37 @@
     if (j.script && j.script.parentNode) j.script.parentNode.removeChild(j.script);
   }
 
-  // convierte la respuesta OpenSearch ["consulta", ["s1","s2"]] en nuestro formato
-  function parseOpenSearch(d) {
-    var lista = (Array.isArray(d) && Array.isArray(d[1])) ? d[1] : [];
+  /* Cada buscador responde en un formato distinto:
+       OpenSearch (Google, Wikipedia):  ["consulta", ["s1", "s2"]]
+       DuckDuckGo por JSONP:            [{phrase: "s1"}, {phrase: "s2"}]
+       Algunos otros:                   {suggestions: [...]}
+     Este parser acepta los tres y descarta lo que no reconozca. */
+  function parseSugerencias(d) {
+    var lista = [];
+    if (Array.isArray(d)) {
+      if (Array.isArray(d[1])) lista = d[1];                    // OpenSearch
+      else if (d.length && typeof d[0] === "object") lista = d;  // lista de objetos
+      else if (typeof d[0] === "string" && d.length > 1) lista = d.slice(1);
+    } else if (d && Array.isArray(d.suggestions)) {
+      lista = d.suggestions;
+    }
     return lista.slice(0, 4).map(function (x) {
-      return { kind: "remote", q: typeof x === "string" ? x : (x && x.phrase) || "" };
+      if (typeof x === "string") return { kind: "remote", q: x };
+      if (x && typeof x === "object") {
+        return { kind: "remote", q: x.phrase || x.suggestion || x.value || x.q || "" };
+      }
+      return { kind: "remote", q: "" };
     }).filter(function (x) { return x.q; });
   }
 
-  function pedirRemotas(v, cb) {
-    if (!state.useRemote) return cb([]);
+  function pedirFetch(url, exito, fallo) {
+    fetch(url, { credentials: "omit", referrerPolicy: "no-referrer", mode: "cors" })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) { exito(parseSugerencias(d)); })
+      .catch(function () { fallo(); });
+  }
 
-    // el buscador propio se pide por fetch: JSONP ejecutaría código de una URL
-    // que no controlamos, y aquí la pone el usuario
-    if (state.engine === "custom") {
-      if (!state.customSuggest) return cb([]);
-      fetch(state.customSuggest.replace("%s", encodeURIComponent(v)),
-            { credentials: "omit", referrerPolicy: "no-referrer" })
-        .then(function (r) { return r.json(); })
-        .then(function (d) { cb(parseOpenSearch(d)); })
-        .catch(function () { cb([]); });
-      return;
-    }
-
-    var plantilla = SUGGEST[state.engine];
-    if (!plantilla) return cb([]);           // Brave y Startpage no tienen endpoint
-
+  function pedirJsonp(url, cb) {
     limpiarJsonp();
     var nombre = "__zaguanSug" + (++jsonpN);
     var script = document.createElement("script");
@@ -2926,13 +2942,10 @@
     window[nombre] = function (d) {
       if (jsonpActual !== j) return;         // llegó tarde, ya hay otra consulta
       limpiarJsonp();
-      cb(parseOpenSearch(d));
+      cb(parseSugerencias(d));
     };
 
-    script.src = plantilla
-      .replace("%cb", nombre)
-      .replace("%lang", lang)
-      .replace("%s", encodeURIComponent(v));
+    script.src = url.replace("%cb", nombre);
     script.referrerPolicy = "no-referrer";
     script.onerror = function () { if (jsonpActual === j) { limpiarJsonp(); cb([]); } };
     j.timer = window.setTimeout(function () {
@@ -2940,6 +2953,32 @@
     }, 3000);
 
     document.head.appendChild(script);
+  }
+
+  function pedirRemotas(v, cb) {
+    if (!state.useRemote) return cb([]);
+
+    // el buscador propio se pide solo por fetch: JSONP ejecutaría código de una
+    // URL que no controlamos, y aquí la pone el usuario
+    if (state.engine === "custom") {
+      if (!state.customSuggest) return cb([]);
+      pedirFetch(state.customSuggest.replace("%s", encodeURIComponent(v)), cb,
+                 function () { cb([]); });
+      return;
+    }
+
+    var par = SUGGEST[state.engine];
+    if (!par) return cb([]);                 // Brave y Startpage no tienen endpoint
+
+    var q = encodeURIComponent(v);
+    var urlF = par.f.replace("%lang", lang).replace("%s", q);
+    var urlJ = par.j && par.j.replace("%lang", lang).replace("%s", q);
+
+    // fetch primero; si el buscador no permite CORS, se intenta JSONP
+    pedirFetch(urlF, cb, function () {
+      if (urlJ) pedirJsonp(urlJ, cb);
+      else cb([]);
+    });
   }
 
   function allLinks() {
@@ -3288,11 +3327,16 @@
     state.useRemote = ev.target.checked; save(); avisoSinSugerencias();
   });
 
-  // avisa si el buscador elegido no tiene endpoint, para que no parezca averiado
+  // avisa si las sugerencias remotas no van a funcionar, para que no parezca averiado:
+  // bien porque el buscador no tiene endpoint, bien porque la página se abre como file://
   function avisoSinSugerencias() {
     var el = document.getElementById("sinSug");
     var hay = state.engine === "custom" ? !!state.customSuggest : !!SUGGEST[state.engine];
-    if (state.useRemote && !hay) {
+    if (!state.useRemote) { el.hidden = true; return; }
+    if (window.location.protocol === "file:") {
+      el.textContent = t("fileWarn");
+      el.hidden = false;
+    } else if (!hay) {
       el.textContent = t("noSuggest", { engine: ENGINES[state.engine].label });
       el.hidden = false;
     } else {
@@ -3366,7 +3410,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.13.0";
+  var VERSION = "1.16.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 
