@@ -6,7 +6,7 @@
 
 Una página de nueva pestaña para navegadores basados en Chromium: buscador, carpetas de
 favoritos al estilo del lanzador de Android y seis estilos visuales. Un único HTML, sin
-dependencias, sin compilación y sin una sola petición a servidores de terceros.
+dependencias, sin compilación y sin peticiones a servidores de terceros salvo que las actives tú.
 
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-8A9A5B.svg?style=flat-square)](LICENSE)
 ![Fichero único](https://img.shields.io/badge/fichero%20único-130%20KB-4FB6C4?style=flat-square)
@@ -66,9 +66,11 @@ DuckDuckGo, Brave, Startpage, Wikipedia, Google o tu propia plantilla, útil si 
 autoalojas un SearXNG. Si escribes `proxmox.local:8006` o `localhost:8080`, navega en
 lugar de buscar.
 
-**Filtrado de favoritos en vivo**
-Al teclear aparecen los enlaces que coinciden, con la carpeta a la que pertenecen. Flechas
-para elegir, Enter para abrir.
+**Filtrado de favoritos y sugerencias**
+Al teclear aparecen los enlaces que coinciden, con la carpeta a la que pertenecen, seguidos
+de tus propias búsquedas anteriores. Flechas para elegir, Enter para abrir. También hay
+sugerencias del buscador, pero **desactivadas por defecto**: enviarían cada pulsación al
+buscador, así que activarlas es una decisión explícita.
 
 **Carpetas tipo lanzador**
 Icono compacto con vista previa 2×2 que se expande en un panel mediante *container
@@ -197,11 +199,15 @@ Ejemplo: `index.html?demo=1&style=cristal&mode=dark&hue=258`
 
 ## Privacidad
 
-- **Ninguna petición de red.** Sin CDN, sin fuentes web, sin analítica, sin telemetría.
+- **Ninguna petición de red por defecto.** Sin CDN, sin fuentes web, sin analítica, sin telemetría.
 - **Los favicons están desactivados por defecto.** Los iconos son iniciales con color
   derivado del dominio. Si los activas, se piden al propio sitio, nunca al servicio de
   favicons de Google, que revelaría tu lista de favoritos.
 - **Tus datos viven en el `localStorage` del navegador** y no salen de tu equipo.
+- **El historial de búsquedas es local y opcional.** No sale del navegador, y puedes
+  borrarlo o desactivarlo desde Ajustes.
+- **Las sugerencias del buscador son opcionales.** Si las dejas desactivadas, la página
+  sigue sin hacer ni una sola petición de red.
 
 ---
 

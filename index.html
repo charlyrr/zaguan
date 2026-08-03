@@ -441,6 +441,16 @@
               transition: background .2s var(--ease), color .2s var(--ease); }
   .mini-btn:hover { background: var(--primary); color: var(--on-primary); }
   .backup-tools { display: flex; flex-wrap: wrap; gap: 7px; }
+  .aviso { margin: -6px 0 14px; font-size: 11.5px; line-height: 1.4; color: var(--muted); opacity: .85; }
+
+  /* el origen de cada sugerencia se distingue con una marca discreta */
+  .hit-history .path, .hit-remote .path { opacity: .75; }
+  .hit-history .path::before, .hit-remote .path::before {
+    content: ""; display: inline-block; vertical-align: middle;
+    width: 5px; height: 5px; border-radius: 50%;
+    margin-right: 6px; background: var(--primary);
+  }
+  .hit-remote .path::before { background: none; border: 1px solid var(--muted); }
   .version { margin: 14px 0 0; text-align: center; font-size: 11px; color: var(--muted); opacity: .75; }
 
   .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
@@ -1207,6 +1217,14 @@
   </label>
   <label class="row"><input type="checkbox" id="cFavicons"> <span data-i18n="useFavicons"></span></label>
 
+  <p class="section-title" data-i18n="suggestions"></p>
+  <label class="row"><input type="checkbox" id="cHistory"> <span data-i18n="useHistory"></span></label>
+  <label class="row"><input type="checkbox" id="cRemote"> <span data-i18n="useRemote"></span></label>
+  <p class="aviso" data-i18n="remoteWarn"></p>
+  <div class="backup-tools">
+    <button class="mini-btn" id="bClearHist" data-i18n="clearHistory"></button>
+  </div>
+
   <p class="section-title" data-i18n="backups"></p>
   <ul class="backups" id="backups"></ul>
   <div class="backup-tools">
@@ -1271,6 +1289,13 @@
       "styleGlass": "Glass",
       "styleMinimal": "Minimal",
       "styleFluent": "Fluent",
+      "suggestions": "Suggestions",
+      "useHistory": "Suggest my previous searches",
+      "useRemote": "Search engine suggestions",
+      "remoteWarn": "Sends what you type to the search engine as you type it.",
+      "clearHistory": "Clear history",
+      "historyTag": "History",
+      "remoteTag": "Suggestion",
       "styleBreeze": "Breeze",
       "engine": "Search engine",
       "customTemplate": "Custom template (use %s)",
@@ -1348,6 +1373,13 @@
       "styleGlass": "Cristal",
       "styleMinimal": "Mínimo",
       "styleFluent": "Fluent",
+      "suggestions": "Sugerencias",
+      "useHistory": "Sugerir mis búsquedas anteriores",
+      "useRemote": "Sugerencias del buscador",
+      "remoteWarn": "Envía al buscador lo que escribes, según lo escribes.",
+      "clearHistory": "Borrar historial",
+      "historyTag": "Historial",
+      "remoteTag": "Sugerencia",
       "styleBreeze": "Breeze",
       "engine": "Buscador",
       "customTemplate": "Plantilla propia (usa %s)",
@@ -1425,6 +1457,13 @@
       "styleGlass": "Verre",
       "styleMinimal": "Minimal",
       "styleFluent": "Fluent",
+      "suggestions": "Suggestions",
+      "useHistory": "Suggérer mes recherches précédentes",
+      "useRemote": "Suggestions du moteur de recherche",
+      "remoteWarn": "Envoie au moteur ce que vous tapez, au fur et à mesure.",
+      "clearHistory": "Effacer l'historique",
+      "historyTag": "Historique",
+      "remoteTag": "Suggestion",
       "styleBreeze": "Breeze",
       "engine": "Moteur de recherche",
       "customTemplate": "Modèle personnalisé (utilisez %s)",
@@ -1502,6 +1541,13 @@
       "styleGlass": "Glas",
       "styleMinimal": "Minimal",
       "styleFluent": "Fluent",
+      "suggestions": "Vorschläge",
+      "useHistory": "Frühere Suchanfragen vorschlagen",
+      "useRemote": "Vorschläge der Suchmaschine",
+      "remoteWarn": "Sendet beim Tippen an die Suchmaschine, was du eingibst.",
+      "clearHistory": "Verlauf löschen",
+      "historyTag": "Verlauf",
+      "remoteTag": "Vorschlag",
       "styleBreeze": "Breeze",
       "engine": "Suchmaschine",
       "customTemplate": "Eigene Vorlage (nutze %s)",
@@ -1579,6 +1625,13 @@
       "styleGlass": "Vetro",
       "styleMinimal": "Minimale",
       "styleFluent": "Fluent",
+      "suggestions": "Suggerimenti",
+      "useHistory": "Suggerisci le mie ricerche precedenti",
+      "useRemote": "Suggerimenti del motore di ricerca",
+      "remoteWarn": "Invia al motore quello che scrivi, mentre lo scrivi.",
+      "clearHistory": "Cancella cronologia",
+      "historyTag": "Cronologia",
+      "remoteTag": "Suggerimento",
       "styleBreeze": "Breeze",
       "engine": "Motore di ricerca",
       "customTemplate": "Modello personalizzato (usa %s)",
@@ -1656,6 +1709,13 @@
       "styleGlass": "Vidro",
       "styleMinimal": "Mínimo",
       "styleFluent": "Fluent",
+      "suggestions": "Sugestões",
+      "useHistory": "Sugerir as minhas pesquisas anteriores",
+      "useRemote": "Sugestões do motor de busca",
+      "remoteWarn": "Envia ao motor o que escreve, à medida que escreve.",
+      "clearHistory": "Limpar histórico",
+      "historyTag": "Histórico",
+      "remoteTag": "Sugestão",
       "styleBreeze": "Breeze",
       "engine": "Motor de busca",
       "customTemplate": "Modelo próprio (use %s)",
@@ -1733,6 +1793,13 @@
       "styleGlass": "Стекло",
       "styleMinimal": "Минимальный",
       "styleFluent": "Fluent",
+      "suggestions": "Подсказки",
+      "useHistory": "Предлагать мои прошлые запросы",
+      "useRemote": "Подсказки поисковика",
+      "remoteWarn": "Отправляет поисковику то, что вы печатаете, по мере ввода.",
+      "clearHistory": "Очистить историю",
+      "historyTag": "История",
+      "remoteTag": "Подсказка",
       "styleBreeze": "Breeze",
       "engine": "Поисковик",
       "customTemplate": "Свой шаблон (используйте %s)",
@@ -1810,6 +1877,13 @@
       "styleGlass": "玻璃",
       "styleMinimal": "极简",
       "styleFluent": "Fluent",
+      "suggestions": "建议",
+      "useHistory": "建议我以前的搜索",
+      "useRemote": "搜索引擎建议",
+      "remoteWarn": "会在你输入时把内容发送给搜索引擎。",
+      "clearHistory": "清除历史",
+      "historyTag": "历史",
+      "remoteTag": "建议",
       "styleBreeze": "Breeze",
       "engine": "搜索引擎",
       "customTemplate": "自定义模板（使用 %s）",
@@ -1928,6 +2002,17 @@
     custom:    { label: "Propio",     url: "" }
   };
 
+  // Endpoints OpenSearch: todos devuelven ["consulta", ["sug1", "sug2", ...]].
+  // Solo se usan si el usuario activa las sugerencias remotas en Ajustes.
+  var SUGGEST = {
+    ddg:       "https://duckduckgo.com/ac/?type=list&q=%s",
+    brave:     "https://search.brave.com/api/suggest?rich=false&q=%s",
+    startpage: "https://www.startpage.com/suggestions?format=opensearch&q=%s",
+    wiki:      "https://es.wikipedia.org/w/api.php?action=opensearch&limit=5&origin=*&search=%s",
+    google:    "https://suggestqueries.google.com/complete/search?client=firefox&q=%s",
+    custom:    ""
+  };
+
   function uid() { return Math.random().toString(36).slice(2, 9); }
 
   // convierte cualquier estado guardado (formatos antiguos incluidos) al formato actual
@@ -1952,6 +2037,9 @@
     if (s.style === "nordico") s.style = "fluent";   // el nórdico se retiró en la 1.9
     if (["material", "clasico", "cristal", "minimo", "fluent", "breeze"].indexOf(s.style) < 0) s.style = "material";
     if (!s.engine || !ENGINES[s.engine]) s.engine = "ddg";
+    if (typeof s.useHistory !== "boolean") s.useHistory = true;    // local, sin red
+    if (typeof s.useRemote !== "boolean") s.useRemote = false;     // remoto, opt-in
+    if (!Array.isArray(s.history)) s.history = [];
     return s;
   }
 
@@ -1981,11 +2069,14 @@
 
   function freshState() {
     return { version: 2, engine: "ddg", custom: "", favicons: false,
-             mode: "auto", hue: 172, style: "material", lang: "auto", items: starterItems() };
+             mode: "auto", hue: 172, style: "material", lang: "auto",
+             useHistory: true, useRemote: false, history: [],
+             items: starterItems() };
   }
 
   /* ---------------- parametros de URL ----------------
      ?demo=1                 carga el conjunto de ejemplo y desactiva el guardado
+                             (tampoco guarda historial de búsquedas)
      ?style=cristal          fuerza un estilo (material|clasico|cristal|minimo|fluent|breeze)
      ?mode=light             fuerza el modo (auto|light|dark)
      ?hue=258                fuerza el tono semilla (0-359)
@@ -2752,6 +2843,58 @@
   var sel = -1;
   var current = [];
 
+  /* ---------------- historial de búsquedas (local) ---------------- */
+  var MAX_HIST = 60;
+
+  function recordSearch(termino) {
+    if (demo || !state.useHistory) return;
+    var q = termino.trim();
+    if (q.length < 2) return;
+    state.history = state.history || [];
+    var ya = state.history.filter(function (h) { return h.q === q; })[0];
+    if (ya) { ya.n++; ya.at = Date.now(); }
+    else state.history.unshift({ q: q, n: 1, at: Date.now() });
+    // se ordena por uso y luego por recencia, y se recorta
+    state.history.sort(function (a, b) { return (b.n - a.n) || (b.at - a.at); });
+    state.history = state.history.slice(0, MAX_HIST);
+    save();
+  }
+
+  function buscarHistorial(v) {
+    if (!state.useHistory || !state.history) return [];
+    return state.history
+      .filter(function (h) { return h.q.toLowerCase().indexOf(v) >= 0 && h.q.toLowerCase() !== v; })
+      .slice(0, 3)
+      .map(function (h) { return { kind: "history", q: h.q }; });
+  }
+
+  /* ---------------- sugerencias remotas (opcionales) ---------------- */
+  var peticion = null;
+  var temporizador = null;
+
+  function pedirRemotas(v, cb) {
+    if (!state.useRemote) return cb([]);
+    var plantilla = state.engine === "custom" ? state.customSuggest : SUGGEST[state.engine];
+    if (!plantilla) return cb([]);
+    if (peticion) peticion.abort();          // cancela la anterior si aún vuela
+    peticion = new AbortController();
+    fetch(plantilla.replace("%s", encodeURIComponent(v)), {
+      signal: peticion.signal,
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      mode: "cors"
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var lista = (Array.isArray(d) && Array.isArray(d[1])) ? d[1] : [];
+        cb(lista.slice(0, 4).map(function (q) {
+          return { kind: "remote", q: typeof q === "string" ? q : (q && q.phrase) || "" };
+        }).filter(function (x) { return x.q; }));
+      })
+      // si el buscador no permite CORS, simplemente no hay sugerencias remotas
+      .catch(function () { cb([]); });
+  }
+
   function allLinks() {
     var out = [];
     state.items.forEach(function (i) {
@@ -2766,13 +2909,24 @@
     if (!current.length) { hits.hidden = true; return; }
     current.forEach(function (e, i) {
       var a = document.createElement("a");
-      a.className = "hit";
-      a.href = normalize(e.link.url);
+      a.className = "hit hit-" + (e.kind || "link");
       a.setAttribute("role", "option");
       a.setAttribute("aria-selected", i === sel ? "true" : "false");
-      var n = document.createElement("span"); n.textContent = e.link.name;
-      var p = document.createElement("span"); p.className = "path";
-      p.textContent = e.where + " · " + host(e.link.url);
+
+      var n = document.createElement("span");
+      var p = document.createElement("span");
+      p.className = "path";
+
+      if (e.kind === "history" || e.kind === "remote") {
+        a.href = searchUrl(e.q);
+        n.textContent = e.q;
+        p.textContent = e.kind === "history" ? t("historyTag") : ENGINES[state.engine].label;
+      } else {
+        a.href = normalize(e.link.url);
+        n.textContent = e.link.name;
+        p.textContent = e.where + " · " + host(e.link.url);
+      }
+
       a.appendChild(n); a.appendChild(p);
       a.addEventListener("mouseenter", function () { sel = i; paintHits(); });
       hits.appendChild(a);
@@ -2780,13 +2934,51 @@
     hits.hidden = false;
   }
 
+  // combina favoritos, historial y sugerencias remotas sin repetir
+  function componer(v, remotas) {
+    var favoritos = allLinks().filter(function (e) {
+      return e.link.name.toLowerCase().indexOf(v) >= 0 || e.link.url.toLowerCase().indexOf(v) >= 0;
+    }).slice(0, 4).map(function (e) { return { kind: "link", where: e.where, link: e.link }; });
+
+    var vistas = {};
+    var salida = favoritos.slice();
+    buscarHistorial(v).concat(remotas || []).forEach(function (x) {
+      var clave = x.q.toLowerCase();
+      if (vistas[clave]) return;
+      vistas[clave] = true;
+      salida.push(x);
+    });
+    return salida.slice(0, 8);
+  }
+
   q.addEventListener("input", function () {
     var v = q.value.trim().toLowerCase();
-    current = v ? allLinks().filter(function (e) {
-      return e.link.name.toLowerCase().indexOf(v) >= 0 || e.link.url.toLowerCase().indexOf(v) >= 0;
-    }).slice(0, 6) : [];
+    if (temporizador) window.clearTimeout(temporizador);
+    if (!v) { current = []; sel = -1; paintHits(); return; }
+
+    // lo local se pinta ya; lo remoto llega después y no debe mover la selección
+    current = componer(v, []);
     sel = current.length ? 0 : -1;
     paintHits();
+
+    if (!state.useRemote || looksLikeUrl(v)) return;
+    temporizador = window.setTimeout(function () {
+      pedirRemotas(v, function (remotas) {
+        if (q.value.trim().toLowerCase() !== v) return;   // el usuario ya escribió otra cosa
+        var elegido = sel >= 0 ? current[sel] : null;
+        current = componer(v, remotas);
+        sel = 0;
+        if (elegido) {
+          for (var i = 0; i < current.length; i++) {
+            var mismo = elegido.kind === "link"
+              ? (current[i].link && current[i].link.id === elegido.link.id)
+              : (current[i].q === elegido.q);
+            if (mismo) { sel = i; break; }
+          }
+        }
+        paintHits();
+      });
+    }, 220);
   });
 
   q.addEventListener("keydown", function (ev) {
@@ -2805,9 +2997,20 @@
     if (!v) return;
     ev.preventDefault();
     var newTab = ev.ctrlKey || ev.metaKey;
-    if (sel >= 0 && current[sel] && !looksLikeUrl(v)) go(normalize(current[sel].link.url), newTab);
-    else if (looksLikeUrl(v)) go(normalize(v), newTab);
-    else go(searchUrl(v), newTab);
+    var elegido = sel >= 0 ? current[sel] : null;
+    if (elegido && !looksLikeUrl(v)) {
+      if (elegido.kind === "history" || elegido.kind === "remote") {
+        recordSearch(elegido.q);
+        go(searchUrl(elegido.q), newTab);
+      } else {
+        go(normalize(elegido.link.url), newTab);
+      }
+    } else if (looksLikeUrl(v)) {
+      go(normalize(v), newTab);
+    } else {
+      recordSearch(v);
+      go(searchUrl(v), newTab);
+    }
   });
 
   function engineLabel() { document.getElementById("engineBtn").textContent = ENGINES[state.engine].label; }
@@ -3018,6 +3221,8 @@
     cEngine.value = state.engine;
     document.getElementById("cCustom").value = state.custom || "";
     document.getElementById("cFavicons").checked = !!state.favicons;
+    document.getElementById("cHistory").checked = !!state.useHistory;
+    document.getElementById("cRemote").checked = !!state.useRemote;
     paintSeeds(); paintModes(); paintStyles(); paintBackups();
     cfgDlg.showModal();
   });
@@ -3025,6 +3230,17 @@
   document.getElementById("cCustom").addEventListener("change", function (ev) { state.custom = ev.target.value.trim(); save(); });
   document.getElementById("cFavicons").addEventListener("change", function (ev) {
     state.favicons = ev.target.checked; commit();
+  });
+  document.getElementById("cHistory").addEventListener("change", function (ev) {
+    state.useHistory = ev.target.checked; save();
+  });
+  document.getElementById("cRemote").addEventListener("change", function (ev) {
+    state.useRemote = ev.target.checked; save();
+  });
+  document.getElementById("bClearHist").addEventListener("click", function () {
+    state.history = [];
+    save();
+    window.alert(t("clearHistory") + " \u2713");
   });
   document.getElementById("cClose").addEventListener("click", function () { cfgDlg.close(); });
 
@@ -3088,7 +3304,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.11.0";
+  var VERSION = "1.12.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 

@@ -5,8 +5,8 @@
 **Your start page, in a single file.**
 
 A new tab page for Chromium-based browsers: search, Android-launcher-style bookmark folders
-and six visual styles. One HTML file — no dependencies, no build step, and not a single
-request to a third-party server.
+and six visual styles. One HTML file — no dependencies, no build step, and no requests to
+third-party servers unless you explicitly turn them on.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-8A9A5B.svg?style=flat-square)](LICENSE)
 ![Single file](https://img.shields.io/badge/single%20file-130%20KB-4FB6C4?style=flat-square)
@@ -66,9 +66,11 @@ DuckDuckGo, Brave, Startpage, Wikipedia, Google, or your own template — handy 
 self-host a SearXNG instance. Type `proxmox.local:8006` or `localhost:8080` and it
 navigates instead of searching.
 
-**Live bookmark filter**
-As you type, matching bookmarks appear with the folder they live in. Arrows to pick,
-Enter to open.
+**Live bookmark filter and suggestions**
+As you type, matching bookmarks appear with the folder they live in, followed by your own
+previous searches. Arrows to pick, Enter to open. Search-engine suggestions are available
+too, but **off by default** — they would send every keystroke to the engine, so turning
+them on is an explicit choice.
 
 **Launcher-style folders**
 A compact icon with a 2×2 preview that expands into a panel via *container transform* —
@@ -196,11 +198,15 @@ Example: `index.html?demo=1&style=cristal&mode=dark&hue=258`
 
 ## Privacy
 
-- **No network requests.** No CDN, no web fonts, no analytics, no telemetry.
+- **No network requests by default.** No CDN, no web fonts, no analytics, no telemetry.
 - **Favicons are off by default.** Icons are initials coloured from the domain name. If you
   turn them on, they're fetched from each site itself — never from Google's favicon
   service, which would leak your bookmark list.
 - **Your data stays in your browser's `localStorage`** and never leaves your machine.
+- **Search history is local and optional.** It never leaves the browser, and you can clear
+  it or switch it off in Settings.
+- **Search-engine suggestions are opt-in.** Leave them off and the page still makes zero
+  network requests.
 
 ---
 
