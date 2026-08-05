@@ -1173,6 +1173,7 @@
     </div>
     <div class="apps" id="apps"></div>
     <div class="panel-actions">
+      <button class="text-btn" id="openAll" data-i18n="openAll"></button>
       <button class="text-btn" id="emptyFolder" data-i18n="emptyAll"></button>
       <button class="text-btn" id="delFolder" data-i18n="deleteFolder"></button>
     </div>
@@ -1333,7 +1334,11 @@
       "folderReading": "Reading",
       "folderMedia": "Media",
       "linkMail": "Mail",
-      "linkCalendar": "Calendar"
+      "linkCalendar": "Calendar",
+      "openAll": "Open all",
+      "openAllHint": "Middle-click to open every page",
+      "openAllConfirm": "Open the {n} pages in “{name}”?",
+      "popupsBlocked": "The browser blocked {n} tabs. Allow pop-ups for this page to open them all."
     },
     "es": {
       "_name": "Español",
@@ -1419,7 +1424,11 @@
       "folderReading": "Lectura",
       "folderMedia": "Multimedia",
       "linkMail": "Correo",
-      "linkCalendar": "Calendario"
+      "linkCalendar": "Calendario",
+      "openAll": "Abrir todo",
+      "openAllHint": "Clic central para abrir todas las páginas",
+      "openAllConfirm": "¿Abrir las {n} páginas de «{name}»?",
+      "popupsBlocked": "El navegador ha bloqueado {n} pestañas. Permite las ventanas emergentes en esta página para abrirlas todas."
     },
     "fr": {
       "_name": "Français",
@@ -1505,7 +1514,11 @@
       "folderReading": "Lecture",
       "folderMedia": "Médias",
       "linkMail": "Courriel",
-      "linkCalendar": "Agenda"
+      "linkCalendar": "Agenda",
+      "openAll": "Tout ouvrir",
+      "openAllHint": "Clic du milieu pour ouvrir toutes les pages",
+      "openAllConfirm": "Ouvrir les {n} pages de « {name} » ?",
+      "popupsBlocked": "Le navigateur a bloqué {n} onglets. Autorisez les fenêtres pop-up sur cette page pour tous les ouvrir."
     },
     "de": {
       "_name": "Deutsch",
@@ -1591,7 +1604,11 @@
       "folderReading": "Lesen",
       "folderMedia": "Medien",
       "linkMail": "E-Mail",
-      "linkCalendar": "Kalender"
+      "linkCalendar": "Kalender",
+      "openAll": "Alle öffnen",
+      "openAllHint": "Mittelklick öffnet alle Seiten",
+      "openAllConfirm": "Die {n} Seiten in „{name}“ öffnen?",
+      "popupsBlocked": "Der Browser hat {n} Tabs blockiert. Erlaube Pop-ups für diese Seite, um alle zu öffnen."
     },
     "it": {
       "_name": "Italiano",
@@ -1677,7 +1694,11 @@
       "folderReading": "Lettura",
       "folderMedia": "Media",
       "linkMail": "Posta",
-      "linkCalendar": "Calendario"
+      "linkCalendar": "Calendario",
+      "openAll": "Apri tutto",
+      "openAllHint": "Clic centrale per aprire tutte le pagine",
+      "openAllConfirm": "Aprire le {n} pagine di «{name}»?",
+      "popupsBlocked": "Il browser ha bloccato {n} schede. Consenti i pop-up su questa pagina per aprirle tutte."
     },
     "pt": {
       "_name": "Português",
@@ -1763,7 +1784,11 @@
       "folderReading": "Leitura",
       "folderMedia": "Multimédia",
       "linkMail": "Correio",
-      "linkCalendar": "Calendário"
+      "linkCalendar": "Calendário",
+      "openAll": "Abrir tudo",
+      "openAllHint": "Clique do meio para abrir todas as páginas",
+      "openAllConfirm": "Abrir as {n} páginas de «{name}»?",
+      "popupsBlocked": "O navegador bloqueou {n} separadores. Permita janelas pop-up nesta página para os abrir todos."
     },
     "ru": {
       "_name": "Русский",
@@ -1849,7 +1874,11 @@
       "folderReading": "Чтение",
       "folderMedia": "Медиа",
       "linkMail": "Почта",
-      "linkCalendar": "Календарь"
+      "linkCalendar": "Календарь",
+      "openAll": "Открыть все",
+      "openAllHint": "Средний щелчок открывает все страницы",
+      "openAllConfirm": "Открыть страницы папки «{name}» ({n})?",
+      "popupsBlocked": "Браузер заблокировал вкладки ({n}). Разрешите всплывающие окна для этой страницы."
     },
     "zh": {
       "_name": "中文",
@@ -1935,7 +1964,11 @@
       "folderReading": "阅读",
       "folderMedia": "影音",
       "linkMail": "邮件",
-      "linkCalendar": "日历"
+      "linkCalendar": "日历",
+      "openAll": "全部打开",
+      "openAllHint": "按鼠标中键打开全部页面",
+      "openAllConfirm": "打开“{name}”中的 {n} 个页面？",
+      "popupsBlocked": "浏览器拦截了 {n} 个标签页。请允许本页弹出窗口以全部打开。"
     }
   };
 
@@ -2582,6 +2615,18 @@
 
     el.appendChild(face); el.appendChild(label); el.appendChild(del);
     el.addEventListener("click", function () { openFolder(item.id, face); });
+    if (item.links.length) el.title = t("openAllHint");
+
+    // el botón central del ratón abre toda la carpeta de golpe
+    el.addEventListener("mousedown", function (ev) {
+      if (ev.button === 1) ev.preventDefault();   // evita el desplazamiento automático
+    });
+    el.addEventListener("auxclick", function (ev) {
+      if (ev.button !== 1) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      abrirCarpeta(item);
+    });
 
     return el;
   }
@@ -2776,6 +2821,34 @@
 
   document.getElementById("panelClose").addEventListener("click", closeFolder);
   scrim.addEventListener("click", function (ev) { if (ev.target === scrim) closeFolder(); });
+
+  /* Abre en pestañas todos los enlaces de una carpeta. El navegador bloquea las
+     aperturas múltiples salvo que se permitan las ventanas emergentes en esta página,
+     así que se cuenta cuántas fallaron y se avisa una sola vez. */
+  var UMBRAL_CONFIRMAR = 6;
+
+  function abrirCarpeta(f) {
+    if (!f || !f.links || !f.links.length) return;
+    if (f.links.length > UMBRAL_CONFIRMAR &&
+        !window.confirm(t("openAllConfirm", { n: f.links.length, name: f.name }))) return;
+
+    var bloqueadas = 0;
+    f.links.forEach(function (l) {
+      var w = window.open(normalize(l.url), "_blank", "noopener");
+      if (!w) bloqueadas++;
+    });
+    if (bloqueadas) window.alert(t("popupsBlocked", { n: bloqueadas }));
+  }
+
+  function carpetaAbierta() {
+    return state.items.filter(function (i) {
+      return i.kind === "folder" && i.id === openId;
+    })[0];
+  }
+
+  document.getElementById("openAll").addEventListener("click", function () {
+    abrirCarpeta(carpetaAbierta());
+  });
 
   document.getElementById("emptyFolder").addEventListener("click", function () {
     var f = currentFolder();
@@ -3410,7 +3483,7 @@
     if (!ev.target.closest(".console")) { current = []; paintHits(); }
   });
 
-  var VERSION = "1.16.0";
+  var VERSION = "1.17.0";
   document.getElementById("version").textContent =
     "Zaguán " + VERSION + " · " + (window.PointerEvent ? "arrastre por puntero" : "sin PointerEvent");
 

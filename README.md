@@ -76,7 +76,8 @@ with those you get bookmarks and history only (Settings says so).
 
 **Launcher-style folders**
 A compact icon with a 2×2 preview that expands into a panel via *container transform* —
-the animation grows out of the icon you tapped.
+the animation grows out of the icon you tapped. Middle-click a folder to open every page
+inside it at once (or use *Open all* in the panel).
 
 **Loose shortcuts**
 Single bookmarks living side by side with folders in the same grid.

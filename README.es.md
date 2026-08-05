@@ -76,7 +76,8 @@ que con ellos solo hay favoritos e historial (Ajustes lo indica).
 
 **Carpetas tipo lanzador**
 Icono compacto con vista previa 2×2 que se expande en un panel mediante *container
-transform*: la animación nace del icono que has pulsado.
+transform*: la animación nace del icono que has pulsado. Con el clic central abres de golpe
+todas las páginas de la carpeta (o desde *Abrir todo* en el panel).
 
 **Accesos sueltos**
 Favoritos individuales conviviendo con las carpetas en la misma rejilla.
